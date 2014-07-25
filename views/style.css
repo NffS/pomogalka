@@ -4,6 +4,7 @@ html,body {
     margin: 0;
     background-color: #E5E5E5;
     font-family: 'RobotoDraft', sans-serif;
+
 }
 
 :host {
@@ -15,6 +16,7 @@ html,body {
 
 #core_scaffold {
     position: absolute;
+    min-width: 100px !important;
     top: 0px;
     right: 0px;
     bottom: 0px;
@@ -59,6 +61,7 @@ core-toolbar {
 .map{
     width: 100%;
     height: calc(100%);
+
 }
 
 .content {
@@ -71,19 +74,13 @@ core-pages#page > div {
     opacity: 0;
     -webkit-transform: translate3d(-100px, 0, -100px) scale(0.5);
     transform: translate3d(-100px, 0, -100px) scale(0.5);
-    transition: all 1s cubic-bezier(.03,.56,.7,.98);
-
-}
-
-core-pages#page .core-selected + div {
-    -webkit-transform: translate3d(100px, 100px, 0) scale(0.5);
-    transform: translate3d(100px, 100px, 0) scale(0.5);
 }
 
 core-pages#page .core-selected {
     opacity: 1;
     -webkit-transform: translateX(0);
     transform: translateX(0);
+    transition: opacity 0.5s ease-in;
 }
 
 core-pages#page div.begin {
@@ -91,7 +88,45 @@ core-pages#page div.begin {
     transform: translate3d(100px, 0, 100px) scale(0.5);
 }
 
+paper-button {
+    margin: 1em;
+    width: 10em;
+    float: right;
+}
 
 
+
+paper-button.colored {
+    color: #4285f4;
+    fill: #4285f4;
+}
+
+.circular {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    margin: 1em;
+    float: left;
+}
+
+paper-button[raisedButton].colored {
+    background: #4285f4;
+    color: #fff;
+}
+
+paper-button[raisedButton].colored #ripple,
+paper-button[raisedButton].colored::shadow #ripple {
+    color: #2a56c6;
+}
+
+paper-button[raisedButton].colored #focusBg,
+paper-button[raisedButton].colored::shadow #focusBg {
+    background: #3367d6;
+}
 
 .clear{clear:both; float:none; height:0; font-size:0;}
