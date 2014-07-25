@@ -100,22 +100,38 @@
 //    document.querySelector('request-page').helpers = [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}];
 
     document.querySelector("#main_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page")
+        page = document.querySelector("core-pages#page");
         page.selected = 0;
     };
 
+    function updateRequestPage(request){
+        var rp = document.querySelector("request-page");
+        if(!request.helps) rp.helps = [];
+        if(!request.helpers) rp.helpers = [];
+        if(!request.candidates) rp.candidates = []; //TODO
+        for (attr in request) {
+            rp[attr] = request[attr];
+        }
+        chagePage(2);
+    }
+
+    function chagePage(n) {
+        page = document.querySelector("core-pages#page");
+        page.selected = n;
+    }
+
     document.querySelector("#request_form_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page")
+        page = document.querySelector("core-pages#page");
         page.selected = 1;
     };
 
     document.querySelector("#request_page_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page")
+        page = document.querySelector("core-pages#page");
         page.selected = 2;
     };
 
     document.querySelector("#registration_form_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page")
+        page = document.querySelector("core-pages#page");
         page.selected = 3;
     };
 
@@ -138,9 +154,9 @@
         success: function(position) {
             map.setCenter(position.coords.latitude, position.coords.longitude);
             map.addMarker({
-
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
+//                color: 'blue',
                 title: "Собор ёба!",
                 animation: 'BOUNCE',
                 infoWindow: {
@@ -163,26 +179,32 @@
         }
     });
 
-    function openRequest() {
+    function openRequest(requestId) {
+        rpc.call('requests.getRequest', requestId, function (resp) {
+            var rp = document.querySelector("request-page");
+            rp.mapUrl = GMaps.staticMapURL({
+                size: [document.querySelector("request-page").clientWidth, 192],
+                lat: resp.result.coord.lat,
+                lng: resp.result.coord.lng,
+                markers: {lat: resp.result.coord.lat, lng:resp.result.coord.lng }
+            });
+            if(!request.helps) rp.helps = [];
+            if(!request.helpers) rp.helpers = [];
+            if(!request.candidates) rp.candidates = []; //TODO
+            for (attr in resp.result) {
+                rp[attr] = resp.result[attr];
+            }
+            page.selected = 2;
+            var url = new Url(document.location.href);
+            url.hash = "request" + requestId;
+            document.location.href = url;
+        });
+    }
+    function checkHash() {
         var url = new Url(document.location.href);
         if (url.hash != "") {
             if (url.hash.indexOf("request") == 0) {
-                var requestId = +url.hash.substring(7);
-                rpc.call('rpc.getRequest', requestId, function (resp) {
-                    var rp = document.querySelector("request-page");
-                    rp.mapUrl = GMaps.staticMapURL({
-                        size: [document.querySelector("request-page").clientWidth, 192],
-                        lat: resp.result.coord.lat,
-                        lng: resp.result.coord.lng
-                    });
-
-                    for (attr in resp.result) {
-                        rp[attr] = resp.result[attr];
-                    }
-                    page = document.querySelector("core-pages#page")
-                    page.selected = 2;
-//                    console.log(page);
-                });
+                openRequest(+url.hash.substring(7));
             }
         }
     }
@@ -192,11 +214,9 @@
 
         socket.on('connect', function(){
             window.rpc = new rpcClient(socket);
-//            rpc.call('rpc.add', 0, 20, function(resp){ console.log("result: " +  resp.result) } );
-            rpc.call('rpc.getAllMarkers',function(resp){
+            rpc.call('requests.getAllMarkers',function(resp){
                 map.addMarkers(resp.result);
             });
-
 //            socket.send( JSON.stringify({id:1,method:"rpc,getAllMarkers",params:""}) )
         });
 
@@ -204,8 +224,7 @@
         socket.connect();
 
         window.addEventListener('polymer-ready', function() {
-            openRequest();
-
+            checkHash();
         });
     });
 

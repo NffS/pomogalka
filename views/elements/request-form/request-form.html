@@ -2,6 +2,7 @@
 <link rel="import" href="../../components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../components/paper-button/paper-button.html">
+<link rel="import" href="../../components/paper-slider/paper-slider.html">
 
 
 <polymer-element name="request-form">
@@ -17,7 +18,7 @@
                 width: 80%;
                 margin: auto;
             }
-            #paper_input,#paper_input1,#paper_input2{
+            paper-input, paper-slider {
                 width: 100%
             }
             #paper_radio_group {
@@ -28,28 +29,68 @@
                 background-color: rgb(151, 182, 255);
             }
 
+            label { color: #808080 }
+
         </style>
         <div class="formConteiner">
-            <paper-input label="Login" floatinglabel required invalid id="paper_input" class="invalid"></paper-input><br>
-            <paper-radio-group selected="City" valueattr="label" selectedindex="0" id="paper_radio_group"><br>
-                <paper-radio-button checked label="City" id="paper_radio_button1"></paper-radio-button>
-                <paper-radio-button label="Poor" id="paper_radio_button2"></paper-radio-button>
-                <paper-radio-button label="Personal" id="paper_radio_button"></paper-radio-button>
+            <paper-input label="Заголовок" floatinglabel required invalid id="titleInput" class="invalid"></paper-input><br>
+            <paper-radio-group selected="user" valueattr="value" id="typeGroup"><br>
+                <paper-radio-button value="city" label="Для города" id="paper_radio_button1"></paper-radio-button>
+                <paper-radio-button value="poor" label="Для нуждающегося" id="paper_radio_button2"></paper-radio-button>
+                <paper-radio-button value="user" label="Для себя" id="paper_radio_button"></paper-radio-button>
             </paper-radio-group><br>
-            <paper-input label="Address" validate="^[0-9]*$" required invalid floatinglabel id="paper_input2"></paper-input><br>
-            <paper-input label="Description" floatinglabel required invalid multiline rows="3" id="paper_input1" class="invalid"></paper-input><br>
-            <paper-button type="submit" onclick="save()" raisedButton label="SAVE" id="paper_button" ></paper-button><br>
+            <paper-input label="Адрес" required invalid floatinglabel id="addressInput"></paper-input><br>
+            <paper-input label="Описание" floatinglabel required invalid multiline rows="3" id="descriptionInput" class="invalid"></paper-input><br>
+            <label>Кол-во помошников<paper-slider min="1" max="20" value="1" editable="true" id="helperAmountInput"></paper-slider></label><br/>
+            <paper-button type="submit" raisedButton label="сохранить" id="paper_button" ></paper-button><br>
         </div>
 
     </template>
 
     <script>
-        Polymer({});
-        function save(){
+        Polymer('request-form', {
+            ready: function(){
+//                console.log(this.$);
+                var obj = this.$;
+                this.$.paper_button.addEventListener("click", function(){save(obj)});
+            }
+        });
+        function save(obj){
+
             var tost = document.querySelector("#toast");
-            tost.text= document.querySelector("#paper_input2").className();
-            tost.show();
-        };
+
+            for(var i in obj){
+                if(obj[i].classList.contains("invalid")) {
+                    tost.text= "Ошибка при заполнении формы";
+                    tost.show();
+                    return false;
+                }
+            }
+            var request = createRequestFromForm(obj);
+            rpc.call('requests.create', request, function(resp) {
+                if(resp.error){
+                    tost.text = resp.error.message + "всё хуёво";
+                    tost.show();
+                    return;
+                }
+                tost.text = "Просьба помощи успешно создана";
+                window.updateRequestPage(resp.result[0]);
+                tost.show();
+            });
+        }
+
+        function createRequestFromForm(obj){
+            return {
+                user: $.jStorage.get("user"),
+                title: obj.titleInput.inputValue,
+                type: obj.typeGroup.selected,
+                address: obj.addressInput.inputValue,
+                helperAmount: obj.helperAmountInput.value,
+                description: obj.descriptionInput.inputValue,
+                state: 'open'
+            };
+        }
+
     </script>
 
 </polymer-element>

@@ -7,7 +7,7 @@ var md5 = require('MD5')
 var mongojs = require('mongojs');
 var db = mongojs("127.0.0.1/pomogalka",["requests","users"]);
 
-var RpcFunctions = {
+var requestsFunctions = {
     add: function (a) {
         var resp = this;
         resp.send({"a":a[0], "b":a[1]});
@@ -29,10 +29,17 @@ var RpcFunctions = {
             if(err) resp.sendError(err);
             resp.send(data);
         });
+    },
+    create: function(request) {
+        var resp = this;
+        db.requests.insert(request, function (err, data){
+            if(err) { resp.sendError(err); return; }
+            resp.send(data);
+        });
     }
 };
 
-var usersFuntions={
+var usersFunctions = {
     registration: function (params) {
         resp = this;
         user = params[0];
@@ -58,13 +65,19 @@ var usersFuntions={
                         resp.sendError({"message": err});
                         return false;
                     }
-                    if(user === null){
+                    if(!user){
                         resp.sendError({"message": "Incorrect login data"});
                         return false;
                     }
                     user.seed = Math.random();
                     db.users.save(user);
-                    resp.send({authKey: md5(user.seed + user.email + user.pass), _id: user._id});
+                    resp.send({
+                        authKey: md5(user.seed + user.email + user.pass),
+                        _id: user._id,
+                        name: user.name,
+                        surname: user.surname,
+                        avatar: user.avatar
+                    });
                     return true;
                 }
             );
@@ -74,8 +87,8 @@ var usersFuntions={
         }
     }
 };
-rpc.exposeModule('rpc', RpcFunctions);
-rpc.exposeModule('users', usersFuntions);
+rpc.exposeModule('requests', requestsFunctions);
+rpc.exposeModule('users', usersFunctions);
 
 server = http.createServer(function(req, res){
     res.writeHead(200, {'Content-Type': 'text/html'});

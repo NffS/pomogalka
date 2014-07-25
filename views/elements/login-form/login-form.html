@@ -46,15 +46,17 @@
                 tost.show();
                 return false;
             }
-            var logIn = {email:obj.emailInput.inputValue,pass:hex_md5(obj.passInput.inputValue)};
+            var logIn = {
+                email: obj.emailInput.inputValue,
+                pass: hex_md5(obj.passInput.inputValue)
+            };
 //            console.log(logIn);
             rpc.call('users.login', logIn,function(resp) {
                 if(resp.error !== null){
-                    tost.text=resp.error.message;
+                    tost.text = resp.error.message;
                     tost.show();
-                }else{
-                    $.jStorage.set("authKey", resp.result.authKey);
-                    $.jStorage.set("_id", resp.result._id);
+                } else {
+                    $.jStorage.set("user", resp.result);
                     tost.text= "Вход выполнен успешно";
                     tost.show();
                 }

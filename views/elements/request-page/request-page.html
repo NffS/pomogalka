@@ -5,10 +5,12 @@
 <link rel="import" href="../../components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../../components/core-collapse/core-collapse.html">
 <link rel="import" href="../request-description/request-description.html">
-<link href="../../components/paper-shadow/paper-shadow.html" rel="import">
+<link rel="import" href="../../components/paper-shadow/paper-shadow.html" >
+<link rel="import" href="../../components/core-icons/core-icons.html">
+<link rel="import" href="../../components/paper-button/paper-button.html">
 
 
-<polymer-element name="request-page" attributes="title address description helperAmount mapUrl">
+<polymer-element name="request-page" attributes="title address user description helperAmount mapUrl">
     <template>
         <style shim-shadowdom>
             html, body {
@@ -115,13 +117,15 @@
                     кол-во человек: {{helperAmount}}
                 </div>
                 <div class="bottom title titlebg">{{title}}</div>
-
             </core-toolbar>
 
             <div class="content" id="content">
                 <div class="float-left" id="float-left">
                     <div class="card paper-shadow-top-z-1">
-                        <request-description>{{description}}</request-description>
+                        <request-description>
+                            {{description}}<br>
+                            <paper-button raisedButton id="helpButton" class='colored' label='Помочь'></paper-button>
+                        </request-description>
                     </div>
                     <div class="card paper-shadow-top-z-1">
                         <h1>Помогли</h1>
@@ -152,25 +156,23 @@
     <script>
         Polymer("request-page",{
             ready: function(){
-                var fl = this.$;
+                var context = this.$;
                 (window.onresize = function(){
-                    var clientWidth = fl.content.clientWidth;
+                    var clientWidth = context.content.clientWidth;
                     var cardWidth = 390;
                     var margin = clientWidth > cardWidth ? (clientWidth % cardWidth) / 2 : 2;
-                    fl["float-left"].style.marginLeft = margin.toFixed() + "px";
+                    context["float-left"].style.marginLeft = margin.toFixed() + "px";
 
                 })();
-
-
-//                headerBg.style.backgroundImage = GMaps.staticMapURL({
-//                    size: [610, 300],
-//                    lat:  33,
-//                    lng:  55
-//                });
-                fl.chat_collapse_button.addEventListener('click', function(){ fl.chat_collapse.toggle(); });
+                context.chat_collapse_button.addEventListener('click', function(){ context.chat_collapse.toggle(); });
             },
-            reload: function() {
+            userChanged:function(old,user) {
+                var context = this.$;
+                if($.jStorage.set("authKey")!= null && user.user_id == $.jStorage.set("authKey")){
+                    context.helpButton.style.display="none";
+                }else{
 
+                }
             }
         });
 
