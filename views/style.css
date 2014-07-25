@@ -1,0 +1,97 @@
+html,body {
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+    background-color: #E5E5E5;
+    font-family: 'RobotoDraft', sans-serif;
+}
+
+:host {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#core_scaffold {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    height: 100%;
+}
+#core_header_panel {
+    background-color: rgb(255, 255, 255);
+}
+#core_toolbar {
+    color: rgb(255, 255, 255);
+    background-color: rgb(79, 125, 201);
+}
+#core_menu {
+    font-size: 16px;
+}
+#core_icon {
+    height: 24px;
+    width: 24px;
+}
+#core_input {
+    padding: 15px;
+}
+@media (min-width: 481px) {
+    #tabs {
+        width: 200px;
+    }
+    .container {
+        width: 400px;
+    }
+}
+
+core-header-panel {
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+core-toolbar {
+    background: #03a9f4;
+    color: white;
+}
+.map{
+    width: 100%;
+    height: calc(100%);
+}
+
+.content {
+    height: 100%;
+    position: absolute;
+    width: 100%
+}
+
+core-pages#page > div {
+    opacity: 0;
+    -webkit-transform: translate3d(-100px, 0, -100px) scale(0.5);
+    transform: translate3d(-100px, 0, -100px) scale(0.5);
+    transition: all 1s cubic-bezier(.03,.56,.7,.98);
+
+}
+
+core-pages#page .core-selected + div {
+    -webkit-transform: translate3d(100px, 100px, 0) scale(0.5);
+    transform: translate3d(100px, 100px, 0) scale(0.5);
+}
+
+core-pages#page .core-selected {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+}
+
+core-pages#page div.begin {
+    -webkit-transform: translate3d(100px, 0, 100px) scale(0.5);
+    transform: translate3d(100px, 0, 100px) scale(0.5);
+}
+
+
+
+
+.clear{clear:both; float:none; height:0; font-size:0;}
