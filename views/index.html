@@ -11,6 +11,7 @@
     <script src="https://cdn.socket.io/socket.io-1.0.6.js"></script>
     <script src="js/jsonrpc-ws-client.js" type="text/javascript"></script>
     <link rel='stylesheet' type='text/css' href='style.css'>
+    <script src="elements/request-page/request-page.js"></script>
 
     <link rel="import" href="components/font-roboto/roboto.html">
     <link rel="import" href="components/core-icons/core-icons.html">
@@ -30,9 +31,9 @@
     <link rel="import" href="components/core-icon/core-icon.html">
     <link rel="import" href="components/core-input/core-input.html">
     <link rel="import" href="components/paper-toast/paper-toast.html">
-
     <link rel="import" href="elements/request-form/request-form.html">
     <link rel="import" href="elements/registration-form/registration-from.html">
+    <link rel="import" href="elements/request-page/request-page.html">
 
     <style>
 
@@ -46,10 +47,11 @@
                 <core-icon icon="search" id="core_icon"></core-icon>
                 <core-input placeholder="Search" id="core_input"></core-input>
             </core-toolbar>
-            <core-menu selected="Item1" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
-                <core-item label="Item1" icon="settings" size="24" id="core_item" horizontal center layout active></core-item>
-                <core-item label="Item2" icon="settings" size="24" id="core_item1" horizontal center layout></core-item>
-                <core-item label="Item3" icon="settings" size="24" id="core_item2" horizontal center layout></core-item>
+            <core-menu selected="Map" valueattr="label" selectedindex="0" id="core_menu" theme="core-light-theme">
+                <core-item label="Map" icon="settings" size="24" id="main_item" horizontal center layout active></core-item>
+                <core-item label="Request Form" icon="settings" size="24" id="request_form_item" horizontal center layout></core-item>
+                <core-item label="Request Page" icon="settings" size="24" id="request_page_item" horizontal center layout></core-item>
+                <core-item label="Registration From" icon="settings" size="24" id="registration_form_item" horizontal center layout></core-item>
             </core-menu>
 
         </core-header-panel>
@@ -62,10 +64,16 @@
 
         <core-pages class="content" id="page" selected="0">
             <div class="content"><div class="map" id="map"></div></div>
-            <div>Two</div>
-            <div><registration-form></registration-form></div>
             <div><request-form></request-form></div>
-            <div>Five</div>
+            <div>
+                <request-page
+                        title="Разгрузить вещи моей жены"
+                        address="ул. Маршала Жукова 233 кв. 142"
+                        description="Очень много вещей. Эта жирная скотина собирала их 10 лет. Я хотел бы выбросить всё это говно, но оно ей очень сильно необходимо. Мы живём на 29-м этаже и лифт не работает. Собираемся переезжать. Мужики помогите я же сам коньчусь тут всё это говно выносить. Благаю"
+                        manAmount="11">
+                </request-page>
+            </div>
+            <div><registration-form></registration-form></div>
         </core-pages>
 
         <paper-toast id="toast" class="capsule" text="text" style="margin: auto"></paper-toast>
@@ -81,36 +89,32 @@
     //        //alert("Selected: " + tabs.selected);
     //    });
 
+    document.querySelector('request-page').helps = [{
+        users: [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}]
+    },{
+        users: [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}]
+    }];
+//    document.querySelector('request-page').helpers = [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}];
 
-    document.querySelector("#core_item1").onclick = function(e) {
+    document.querySelector("#main_item").onclick = function(e) {
         page = document.querySelector("core-pages#page")
-                page.selected = 3;
-        page.async(function() {
-            if (page.selectedIndex == 0) {
-                page.selectedItem.classList.remove('begin');
-            } else if (page.selectedIndex == page.items.length - 1) {
-                page.items[0].classList.add('begin');
-            }
-        });
-
-    };
-
-    document.querySelector("#core_item").onclick = function(e) {
-        page = document.querySelector("#page")
         page.selected = 0;
-        page.async(function() {
-            if (page.selectedIndex == 0) {
-                page.selectedItem.classList.remove('begin');
-            } else if (page.selectedIndex == page.items.length - 1) {
-                page.items[0].classList.add('begin');
-            }
-        });
-
     };
 
-    document.querySelector("#core_item2").onclick = function(e) {
-        document.querySelector("#page").selected=2;
-        };
+    document.querySelector("#request_form_item").onclick = function(e) {
+        page = document.querySelector("core-pages#page")
+        page.selected = 1;
+    };
+
+    document.querySelector("#request_page_item").onclick = function(e) {
+        page = document.querySelector("core-pages#page")
+        page.selected = 2;
+    };
+
+    document.querySelector("#registration_form_item").onclick = function(e) {
+        page = document.querySelector("core-pages#page")
+        page.selected = 3;
+    };
 
     var map = new GMaps({
         div: '#map',
