@@ -1,0 +1,66 @@
+<link rel="import" href="../../components/paper-input/paper-input.html">
+<link rel="import" href="../../components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../components/paper-button/paper-button.html">
+
+
+<polymer-element name="login-form">
+    <template>
+        <style>
+            :host {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+            }
+            .formConteiner{
+                width: 80%;
+                margin: auto;
+            }
+            paper-input {
+                width: 100%
+            }
+
+        </style>
+        <div class="formConteiner">
+            <paper-input label="Email" floatinglabel validate="^.{1,}@.{2,}$" id="emailInput"></paper-input><br>
+            <paper-input label="Пароль" floatinglabel type="password" validate="^.{4,20}$" id="passInput"></paper-input><br>
+            <paper-button type="submit" raisedButton label="Вход" id="login_button" ></paper-button>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer('login-form', {
+            ready: function () {
+                var obj = this.$;
+                this.$.login_button.addEventListener("click", function (){login(obj)});
+            }
+        });
+
+        function login(obj){
+            var tost = document.querySelector("#toast");
+
+            if(obj.passInput.inputValue.length < 4 && obj.emailInput.inputValue.length < 1){
+                tost.text= "Ошибка в полях формы";
+                tost.show();
+                return false;
+            }
+            var logIn = {email:obj.emailInput.inputValue,pass:hex_md5(obj.passInput.inputValue)};
+//            console.log(logIn);
+            rpc.call('users.login', logIn,function(resp) {
+                if(resp.error !== null){
+                    tost.text=resp.error.message;
+                    tost.show();
+                }else{
+                    $.jStorage.set("authKey", resp.result.authKey);
+                    $.jStorage.set("_id", resp.result._id);
+                    tost.text= "Вход выполнен успешно";
+                    tost.show();
+                }
+            });
+        };
+
+    </script>
+
+</polymer-element>

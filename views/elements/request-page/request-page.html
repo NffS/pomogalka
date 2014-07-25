@@ -1,0 +1,178 @@
+<link rel="import" href="../../components/core-scroll-header-panel/core-scroll-header-panel.html">
+<link rel="import" href="../../components/core-scroll-header-panel/demos/lorem-ipsum.html">
+<link rel="import" href="../../components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../../components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../components/core-collapse/core-collapse.html">
+<link rel="import" href="../request-description/request-description.html">
+<link href="../../components/paper-shadow/paper-shadow.html" rel="import">
+
+
+<polymer-element name="request-page" attributes="title address description helperAmount mapUrl">
+    <template>
+        <style shim-shadowdom>
+            html, body {
+                height: 100%;
+            }
+            :host {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family: sans-serif;
+                color: #333;
+            }
+
+            core-scroll-header-panel {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+
+            /* background for toolbar when it is at its full size */
+            core-scroll-header-panel::shadow #headerBg {
+
+                background-color: #ffffff;
+
+            }
+
+            /* background for toolbar when it is condensed */
+            core-scroll-header-panel::shadow #condensedHeaderBg {
+                background-color: #ffffff;
+            }
+
+            core-toolbar {
+                color: #f1f1f1;
+                fill: #f1f1f1;
+                background-color: transparent;
+            }
+
+            .title {
+                -webkit-transform-origin: 0;
+                transform-origin: 0;
+                font-size: 40px;
+            }
+
+            .content {
+                /*padding: 10px 30px;*/
+                width: 100%;
+                height: 100%;
+            }
+
+            .card {
+                background:#FFF;
+                /*border:1px solid #AAA;*/
+                /*border-bottom:3px solid #BBB;*/
+                padding:0px;
+                margin:15px;
+                overflow:hidden;
+                border-radius: 2px;
+            }
+
+            .float-left .card {
+                float:left;
+                width:350px;
+                /*height:270px;*/
+            }
+
+            .circular {
+                width: 54px;
+                height: 54px;
+                border-radius: 27px;
+                -webkit-border-radius: 27px;
+                -moz-border-radius: 27px;
+                margin: 6px;
+                float: left;
+            }
+
+            h1 {
+                margin: 0;
+                padding: 10px;
+                padding-bottom: 0;
+            }
+
+            .titlebg {
+                width: 100%;
+                border-radius: 10px;
+                padding-top: 203px;
+                top: -93px;
+                position: relative;
+                background: rgba(0, 0, 0, 0.3);
+            }
+
+        </style>
+        <core-scroll-header-panel condenses>
+
+            <paper-shadow></paper-shadow>
+            <core-toolbar style="background-image: url({{mapUrl}});"  class="tall">
+                <div class="middle" >
+                    адрес: {{address}}<br>
+                    кол-во человек: {{helperAmount}}
+                </div>
+                <div class="bottom title titlebg">{{title}}</div>
+
+            </core-toolbar>
+
+            <div class="content" id="content">
+                <div class="float-left" id="float-left">
+                    <div class="card paper-shadow-top-z-1">
+                        <request-description>{{description}}</request-description>
+                    </div>
+                    <div class="card paper-shadow-top-z-1">
+                        <h1>Помогли</h1>
+                        <template repeat="{{help in helps}}">
+                            <template repeat="{{user in help.users}}">
+                                <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
+                                    <img class="circular" src="img/{{user.avatar}}">
+                                </core-tooltip>
+                            </template>
+                        </template>
+                        <h1>Хотят помочь</h1>
+                        <template repeat="{{user in helpers}}">
+                            <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
+                                <img class="circular" src="img/{{user.avatar}}">
+                            </core-tooltip>
+                        </template>
+                    </div>
+                    <div class="card paper-shadow-top-z-1">
+                        <paper-button label="Обсуждение" id="chat_collapse_button"></paper-button>
+                        <core-collapse id="chat_collapse">
+                            Ебаный сорт
+                        </core-collapse>
+                    </div>
+                </div>
+            </div>
+        </core-scroll-header-panel>
+    </template>
+    <script>
+        Polymer("request-page",{
+            ready: function(){
+                var fl = this.$;
+                (window.onresize = function(){
+                    var clientWidth = fl.content.clientWidth;
+                    var cardWidth = 390;
+                    var margin = clientWidth > cardWidth ? (clientWidth % cardWidth) / 2 : 2;
+                    fl["float-left"].style.marginLeft = margin.toFixed() + "px";
+
+                })();
+
+
+//                headerBg.style.backgroundImage = GMaps.staticMapURL({
+//                    size: [610, 300],
+//                    lat:  33,
+//                    lng:  55
+//                });
+                fl.chat_collapse_button.addEventListener('click', function(){ fl.chat_collapse.toggle(); });
+            },
+            reload: function() {
+
+            }
+        });
+
+    </script>
+</polymer-element>
