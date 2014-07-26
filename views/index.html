@@ -94,6 +94,7 @@
 
     GMaps.geolocate({
         success: function(position) {
+            console.log(position);
             userPosition = position;
             map.setCenter(position.coords.latitude, position.coords.longitude);
             map.addMarker({
@@ -228,5 +229,27 @@
             if(user) setUserProfile(user);
         });
     });
+
+    function checkNear(){
+        var lastTime = $.jStorage.get("lastTime");
+
+        GMaps.geolocate({
+            success: function(position) {
+                userPosition = position;
+                if(lastTime)
+                    rpc.call('requests.checkNear', position.coords, lastTime ,function(resp){
+                        if(resp.error) return;
+                        $.jStorage.set("lastTime", resp.result.time);
+                        console.log(resp);
+                    });
+                else
+                    rpc.call('requests.checkNear', position.coords, function(resp){
+                        if(resp.error) return;
+                        $.jStorage.set("lastTime", resp.result.time);
+                        console.log(resp);
+                    });
+            }
+        });
+    }
 
 </script>

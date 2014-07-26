@@ -120,7 +120,7 @@ var requestsFunctions = {
     },
     addMessage: function(params){
         var resp = this;
-            if(params.length != 2) {
+        if(params.length != 2) {
             resp.sendError({message: "Wrong data received"});
             return;
         }
@@ -137,8 +137,41 @@ var requestsFunctions = {
                 if (err) resp.sendError({"message": err});
                 else resp.send("ok");
         });
-    }
+    },
+    checkNear: function(params){
+        var resp = this;
+        if(params.length < 1) {
+            resp.sendError({message: "Wrong data received"});
+            return;
+        }
+        console.log(params);
+        var coords = params[0];
+        console.log([coords.latitude, coords.longitude]);
+        var time = params[1];
+        var query = {
+            point: {
+                $near: {
+                    $geometry: { type : "Point" , coordinates : [coords.latitude, coords.longitude] },
+                    $maxDistance: 5000
+                }
+            }
+        };
 
+        if(time) query.date = {$gt: new Date(time)};
+
+        console.log(query);
+        db.requests.find(query, function(err, data){
+            var res = data.map( function(el) {
+                return {
+                    _id: el._id,
+                    title: el.title,
+                    address: el.address
+                }
+            });
+            resp.send({requests: res, time: new Date()});
+            console.log({requests: res, time: new Date()});
+        });
+    }
 };
 
 var usersFunctions = {

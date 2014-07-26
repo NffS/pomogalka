@@ -7,6 +7,7 @@ var db = mongojs("127.0.0.1/pomogalka",["requests", "users"]);
 db.requests.drop(function(){
     var request1 = {
         _id: mongojs.ObjectId('53ce913521207bcc774d2251'),
+        point: { type: "Point", coordinates: [ 46.471120, 30.740619 ] },
         coord: {
             lat: 46.471120,
             lng: 30.740619,
@@ -21,6 +22,7 @@ db.requests.drop(function(){
                     "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(\"53ce913521207bcc774d2251\")'></paper-button>"
             }
         },
+        date: new Date(),
         user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
         address: "address",
         description: "description",
@@ -67,6 +69,7 @@ db.requests.drop(function(){
     };
     var request2 = {
         _id: mongojs.ObjectId('53ce913521207bcc774d225c'),
+        point: { type: "Point", coordinates: [ 46.455410, 30.754048 ] },
         coord: {
             lat: 46.455410,
             lng: 30.754048,
@@ -81,6 +84,7 @@ db.requests.drop(function(){
                     "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(\"53ce913521207bcc774d225c\")'></paper-button>"
             }
         },
+        date: new Date(),
         user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
         address: "address",
         description: "Описание описывает описывает описывает описывает описывает описывает описывает описывает " +
@@ -115,6 +119,7 @@ db.requests.drop(function(){
         ]
     };
     db.requests.insert([request1, request2]);
+    db.requests.ensureIndex({point:"2dsphere"});
 });
 
 var ch2 = {
