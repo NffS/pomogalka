@@ -23,7 +23,7 @@ db.requests.drop(function(){
             }
         },
         date: new Date(),
-        user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+        user: { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
         address: "address",
         description: "description",
         title: "title",
@@ -31,37 +31,37 @@ db.requests.drop(function(){
         state: "open", // closed
         type: "user", // poor, city
         candidates: [
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helpers: [
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helps: [{
                 users: [
-                    { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                    { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                    { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
                 ],
                 date: new Date("27/01/2007")
             },{
                 users: [
-                    { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                    { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                    { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
                 ],
                 date: new Date("27/01/2008")
             }
         ],
         messages: [ {
-                user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                user: { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
                 text: "Hello. Im a banana",
                 date: new Date()
             },{
-                user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                user: { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
                 text: "Hello. Im a banana",
                 date: new Date()
             },{
-                user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                user: { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
                 text: "Hello. Im a banana",
                 date: new Date()
             }
@@ -85,7 +85,7 @@ db.requests.drop(function(){
             }
         },
         date: new Date(),
-        user: { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+        user: { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
         address: "address",
         description: "Описание описывает описывает описывает описывает описывает описывает описывает описывает " +
             "описывает описывает описывает описывает описывает описывает описывает описывает описывает " +
@@ -96,23 +96,23 @@ db.requests.drop(function(){
         state: "open", // closed
         type: "user", // poor, city
         candidates: [
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helpers: [
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-            { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helps: [{
                 users: [
-                    { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                    { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                    { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
                 ],
                 date: new Date("27/01/2007")
             },{
                 users: [
-                    { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                    { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                    { _id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { _id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
                 ],
                 date: new Date("27/01/2008")
             }
@@ -123,27 +123,27 @@ db.requests.drop(function(){
 });
 
 var ch2 = {
-    request_id: mongojs.ObjectId('53ce913521207bcc774d225c'),
+    _id: mongojs.ObjectId('53ce913521207bcc774d225c'),
     title: "Заголовок оказаной помощи",
     helpers: [
-        { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-        { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+        { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+        { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
     ],
     type: "toUser", //fromUser, create
     date: new Date()
 };
 var ch1 = {
-    request_id: mongojs.ObjectId('53ce913521207bcc774d2251'),
+    _id: mongojs.ObjectId('53ce913521207bcc774d2251'),
     title: "Заголовок оказаной помощи",
     helpers: [
-        { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-        { user_id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+        { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+        { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
     ],
     type: "fromUser",
     date: new Date()
 };
 var ch3 = {
-    request_id: mongojs.ObjectId('53ce913521207bcc774d2251'),
+    _id: mongojs.ObjectId('53ce913521207bcc774d2251'),
     title: "Заголовок созданной помощи",
     type: "create",
     date: new Date(),
@@ -160,13 +160,13 @@ db.users.drop(function(){
         email: "e@mail.com",
         reputation: 0.1,
         requests: [
-            {request_id: mongojs.ObjectId('53ce913521207bcc774d2251'), title: "title1"},
-            {request_id: mongojs.ObjectId('53ce913521207bcc774d225c'), title: "title2"}
+            {_id: mongojs.ObjectId('53ce913521207bcc774d2251'), title: "title1"},
+            {_id: mongojs.ObjectId('53ce913521207bcc774d225c'), title: "title2"}
         ],
         helps: [
-            {request_id: mongojs.ObjectId('53ce913521207bcc774d225c'), title: "asd", date: new Date()},
-            {request_id: mongojs.ObjectId('53ce913521207bcc774d225c'), title: "asd", date: new Date()},
-            {request_id: mongojs.ObjectId('53ce913521207bcc774d2251'), title: "asd", date: new Date()}
+            {_id: mongojs.ObjectId('53ce913521207bcc774d225c'), title: "asd", date: new Date()},
+            {_id: mongojs.ObjectId('53ce913521207bcc774d225c'), title: "asd", date: new Date()},
+            {_id: mongojs.ObjectId('53ce913521207bcc774d2251'), title: "asd", date: new Date()}
         ],
         chronicle: [ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3]
     };

@@ -75,7 +75,15 @@ var requestsFunctions = {
     },
     acceptAllHelpers: function(params){
         var resp = this;
-        if(params.length==2) {
+//        _id: mongojs.ObjectId('53ce913521207bcc774d2251'),
+//            title: "Заголовок оказаной помощи",
+//            helpers: [
+//            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+//            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+//        ],
+//            type: "fromUser",
+//            date: new Date()
+        if(params.length==3) {
             db.requests.findAndModify({query: {_id: mongojs.ObjectId(params[0])},
                 update: {$set:{helpers: [ ]}, $addToSet: {"helps": {users: params[1], "date": new Date()}}}, new: true},
                 function (err,data) {
@@ -84,6 +92,18 @@ var requestsFunctions = {
                         return;
                     }
                     resp.send({helps: data.helps});
+                    var ch = new Object();
+                    ch._id =  mongojs.ObjectId(params[0]);
+                    ch.title =  params[2];
+                    ch.type = "fromUser";
+                    ch.date = new Date();
+                    ch.helpers = params[1];
+
+                    db.users.update({$or: params[1].map(function(elem){ return {_id:mongojs.ObjectId(elem._id)}})},
+                        {$inc: {reputation : 1}, $addToSet:{chronicle: ch, helps: {_id: ch._id, title: ch.title}}},{multi: true});
+                    ch.type = "toUser";
+                    db.users.update({_id: mongojs.ObjectId(data.user._id)},{$addToSet:{chronicle: ch}});
+
             });
         }else
             resp.sendError({message: "Wrong data received"});
@@ -116,6 +136,17 @@ var requestsFunctions = {
         db.requests.insert(request[0], function (err, data){
             if(err) { resp.sendError(err); return; }
             resp.send(data);
+            var ch = new Object();
+            ch._id =  id;
+            ch.title =  request[0].title;
+            ch.type = "create";
+            ch.description = request[0].description;
+            ch.date = new Date();
+
+            db.users.update({_id: mongojs.ObjectId(request[0].user._id)},
+                {$addToSet:{requests: {_id: ch._id, title: ch.title},chronicle: ch}},{multi: false},
+            function(err){});
+
         });
     },
     addMessage: function(params){

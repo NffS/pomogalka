@@ -38,26 +38,28 @@
                     <my-card>
                         <h1>Просьбы о помощи</h1>
                         <template repeat="{{request in user.requests}}">
-                            <paper-button raisedButton label="{{request.title}}" onclick="openRequest('{{request.request_id}}')"></paper-button><br>
+                            <paper-button raisedButton label="{{request.title}}" onclick="openRequest('{{request._id}}')"></paper-button><br>
                         </template>
                     </my-card>
                     <my-card>
                         <h1>Оказаная помощь</h1>
                         <template repeat="{{request in user.helps}}">
-                            <paper-button raisedButton label="{{request.title}}" onclick="openRequest('{{request.request_id}}')"></paper-button><br>
+                            <paper-button raisedButton label="{{request.title}}" onclick="openRequest('{{request._id}}')"></paper-button><br>
                         </template>
                     </my-card>
                     <template repeat="{{ch in user.chronicle}}">
                         <my-card>
                             <h1>{{ch.type == 'toUser' ? 'Помогли' : ch.type == 'fromUser' ? 'Помог' : 'Попросил'}}</h1>
-                            <i>{{ch.date}}</i>
-                            <paper-button raisedButton label="{{ch.title}}" onclick="openRequest('{{ch.request_id}}')"></paper-button><br>
+                            <i>{{ch.date}}</i><br>
+                            <paper-button raisedButton label="{{ch.title}}" onclick="openRequest('{{ch._id}}')"></paper-button><br>
                             <template if="{{ch.type != 'create'}}">
                                 <h1>{{ch.type == 'toUser' ? 'Вот эти ребята' : 'Вместе с'}}</h1>
-                                <template repeat="{{us in ch.helpers}}">
-                                    <core-tooltip label="{{us.name}} {{us.surname}}" position="top">
-                                        <img class="circular " src="img/{{us.avatar}}" onclick="openUser('{{us.user_id}}')">
-                                    </core-tooltip>
+                                <template  repeat="{{us in ch.helpers}}">
+                                    <template if="{{us._id != user._id}}">
+                                        <core-tooltip label="{{us.name}} {{us.surname}}" position="top">
+                                            <img class="circular " src="img/{{us.avatar}}" onclick="openUser('{{us._id}}')">
+                                        </core-tooltip>
+                                    </template>
                                 </template>
                             </template>
                             <template if="{{ch.type == 'create'}}">
