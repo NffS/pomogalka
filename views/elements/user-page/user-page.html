@@ -121,12 +121,16 @@
                     ],
                     chronicle: [ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3]
                 };
-                (window.onresize = function(){
+
+                function resize(){
                     var clientWidth = context.content.clientWidth;
-                    var cardWidth = 390;
+                    var cardWidth = 404;
                     var margin = clientWidth > cardWidth ? (clientWidth % cardWidth) / 2 : 2;
                     context["float-left"].style.marginLeft = margin.toFixed() + "px";
-                })();
+                }
+                resize();
+                window.addEventListener('resize', resize);
+
             }
         });
 

@@ -15,7 +15,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
     <script src="js/jstorage.js"></script>
     <link rel='stylesheet' type='text/css' href='style.css'>
-    <script src="elements/request-page/request-page.js"></script>
 
     <link rel="import" href="components/font-roboto/roboto.html">
     <link rel="import" href="components/core-icons/core-icons.html">
@@ -175,7 +174,6 @@
     }
 
     function checkHash() {
-        console.log("Asad");
         var url = new Url(document.location.href);
         if (url.hash != "") {
             switch(url.hash){
@@ -207,9 +205,9 @@
             var socket = io('http://localhost:9000');
             socket.on('connect', function(){
                 window.rpc = new rpcClient(socket);
+                checkHash();
                 rpc.call('requests.getAllMarkers',function(resp){
                     map.addMarkers(resp.result);
-                    checkHash();
                 });
             });
             socket.connect();

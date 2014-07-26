@@ -73,6 +73,21 @@ var requestsFunctions = {
         }else
             resp.sendError({message: "Wrong data received"});
     },
+    acceptAllHelpers: function(params){
+        var resp = this;
+        if(params.length==2) {
+            db.requests.findAndModify({query: {_id: mongojs.ObjectId(params[0])},
+                update: {$set:{helpers: [ ]}, $addToSet: {"helps": {users: params[1], "date": new Date()}}}, new: true},
+                function (err,data) {
+                    if (err) {
+                        resp.sendError({"message": err});
+                        return;
+                    }
+                    resp.send({helps: data.helps});
+            });
+        }else
+            resp.sendError({message: "Wrong data received"});
+    },
     getAllMarkers: function () {
         var resp = this;
         db.requests.find(
@@ -122,7 +137,6 @@ var requestsFunctions = {
                 if (err) resp.sendError({"message": err});
                 else resp.send("ok");
         });
-
     }
 
 };

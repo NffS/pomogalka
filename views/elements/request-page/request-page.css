@@ -57,7 +57,7 @@ core-toolbar {
     position: relative;
     top: -10px;
 }
-#acceptHelpButton{
+#acceptAllHelpersButton{
     display: none;
     font-size: 10px;
     color: green;
@@ -80,21 +80,6 @@ core-toolbar {
     height: 100%;
 }
 
-.card {
-    background:#FFF;
-    /*border:1px solid #AAA;*/
-    /*border-bottom:3px solid #BBB;*/
-    padding:0px;
-    margin:15px;
-    overflow:hidden;
-    border-radius: 2px;
-}
-
-.float-left .card {
-    float:left;
-    width:350px;
-    /*height:270px;*/
-}
 
 .circular {
     width: 54px;
