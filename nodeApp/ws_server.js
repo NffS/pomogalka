@@ -2,11 +2,13 @@ var http = require('http');
 var io = require('socket.io');
 var rpc = require('jsonrpc-ws');
 var validator = require('validator');
-var md5 = require('MD5')
+var md5 = require('MD5');
+var RSS = require('rss');
 
 var mongojs = require('mongojs');
 var db = mongojs("127.0.0.1/pomogalka",["requests","users"]);
 
+var siteUrl = "http://pomogalka.com.ua";
 
 
 var requestsFunctions = {
@@ -150,7 +152,7 @@ var requestsFunctions = {
             db.users.update({_id: mongojs.ObjectId(request[0].user._id)},
                 {$addToSet:{requests: {_id: ch._id, title: ch.title},chronicle: ch}},{multi: false},
             function(err){});
-
+            generateRss();
         });
     },
     addMessage: function(params){
@@ -290,3 +292,33 @@ function newMarkers(resp) {
     socket.emit('newMarker', {message: resp});
 }
 server.listen(9000);
+
+function generateRss() {
+    db.requests.find(function (err, data) {
+        if (err) return;
+        var feed = new RSS({
+            title: 'Помогалка',
+            description: 'Сервис взаимопомощи',
+            feed_url: siteUrl + '/rss.xml',
+            site_url: siteUrl
+        });
+        data.forEach(function (i) {
+            feed.item({
+                title: i.title,
+                description: i.description,
+                url: siteUrl + '/request' + i._id, // link to the item
+                categories: [i.type, 'pomogalka'], // optional - array of item categories
+                author: i.user.name + " " + i.user.surname, // optional - defaults to feed author property
+                date: i.date, // any format that js Date can parse.
+                lat: i.coord.lat, //optional latitude field for GeoRSS
+                long: i.coord.lng //optional longitude field for GeoRSS
+            });
+        });
+        var xml = feed.xml();
+        var fs = require('fs');
+        fs.writeFile("../views/rss.xml", xml, function (err) {
+            if(err) console.log(err);
+            else console.log("The file was saved!");
+        });
+    });
+}
