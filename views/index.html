@@ -223,6 +223,13 @@
                     map.addMarkers(resp.result);
                 });
             });
+
+
+            socket.on('newMarker', function (resp) {
+                map.addMarker(resp.message);
+                console.log(resp.message);
+            });
+
             socket.connect();
             var user = $.jStorage.get("user");
             if(user) setUserProfile(user);

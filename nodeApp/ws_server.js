@@ -7,6 +7,8 @@ var md5 = require('MD5')
 var mongojs = require('mongojs');
 var db = mongojs("127.0.0.1/pomogalka",["requests","users"]);
 
+
+
 var requestsFunctions = {
     addCandidate: function (params) {
         //TODO check candidate authKey
@@ -137,6 +139,7 @@ var requestsFunctions = {
         db.requests.insert(request[0], function (err, data){
             if(err) { resp.sendError(err); return; }
             resp.send(data);
+            newMarkers(data.coord);
             var ch = new Object();
             ch._id =  id;
             ch.title =  request[0].title;
@@ -285,5 +288,7 @@ server = http.createServer(function(req, res){
 
 var socket = io.listen(server);
 rpc.listen(socket);
-
+function newMarkers(resp) {
+    socket.emit('newMarker', {message: resp});
+}
 server.listen(9000);
