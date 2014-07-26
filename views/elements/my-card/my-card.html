@@ -1,0 +1,28 @@
+<link rel="import" href="../../components/paper-shadow/paper-shadow.html" >
+
+<polymer-element name="my-card">
+    <template>
+        <style>
+            .card {
+                background:#FFF;
+                /*border:1px solid #AAA;*/
+                /*border-bottom:3px solid #BBB;*/
+                padding-bottom: 1em;
+                padding-left: 1em;
+                padding-right: 1em;
+                padding-top: 0;
+                margin:15px;
+                overflow:hidden;
+                border-radius: 2px;
+                float:left;
+                width:350px;
+            }
+        </style>
+        <paper-shadow></paper-shadow>
+        <div class="card paper-shadow-top-z-1">
+            <content></content>
+        </div>
+
+    </template>
+    <script> Polymer({}); </script>
+</polymer-element>

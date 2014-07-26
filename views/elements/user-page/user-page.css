@@ -1,0 +1,129 @@
+html, body {
+    height: 100%;
+}
+:host {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: sans-serif;
+    color: #333;
+}
+
+core-scroll-header-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* background for toolbar when it is at its full size */
+core-scroll-header-panel::shadow #headerBg {
+    background-color: #f4b400;
+}
+
+/* background for toolbar when it is condensed */
+core-scroll-header-panel::shadow #condensedHeaderBg {
+    background-color: #f4b400;
+}
+
+core-toolbar {
+    color: #f1f1f1;
+    fill: #f1f1f1;
+    background-color: transparent;
+}
+
+.title {
+    -webkit-transform-origin: 0;
+    transform-origin: 0;
+    font-size: 40px;
+}
+.acceptUserButton{
+    font-size: 12px;
+    color: green;
+    border-radius: 27px;
+    left: 13px;
+}
+.cancelHelperButton{
+    font-size: 10px;
+    color: #d6081d;
+    left: 13px;
+    position: relative;
+    top: -16px;
+}
+#acceptHelpButton{
+    display: none;
+    font-size: 10px;
+    color: green;
+    top: 8px;
+    left: -12px;
+}
+#helpButton{
+    background: green;
+    width: 90%;
+}
+#unHelpButton{
+    background: FireBrick;
+    width: 90%;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+}
+
+.float-left .card {
+    float:left;
+    width:350px;
+    /*height:270px;*/
+}
+
+.circular {
+    width: 54px;
+    height: 54px;
+    border-radius: 27px;
+    -webkit-border-radius: 27px;
+    -moz-border-radius: 27px;
+    margin: 6px;
+    float: left;
+}
+
+.circular-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    float: left;
+}
+
+.helpers {
+    margin-bottom: 0px;
+}
+.candidates {
+    margin-top: -34px;
+}
+
+h1 {
+    margin: 0;
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+paper-button {
+    font-size: large;
+    text-transform: initial;
+    margin: 5px 0;
+}
+
+table {
+    width: 100%;
+}
+
+i {
+    font-size: smaller;
+}

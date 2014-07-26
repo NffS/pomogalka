@@ -1,0 +1,132 @@
+html, body {
+    height: 100%;
+}
+:host {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: sans-serif;
+    color: #333;
+}
+
+core-scroll-header-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* background for toolbar when it is at its full size */
+core-scroll-header-panel::shadow #headerBg {
+
+    background-color: #ffffff;
+
+}
+
+/* background for toolbar when it is condensed */
+core-scroll-header-panel::shadow #condensedHeaderBg {
+    background-color: #ffffff;
+}
+
+core-toolbar {
+    color: #f1f1f1;
+    fill: #f1f1f1;
+    background-color: transparent;
+}
+
+.title {
+    -webkit-transform-origin: 0;
+    transform-origin: 0;
+    font-size: 40px;
+}
+.acceptUserButton{
+    font-size: 12px;
+    color: green;
+    border-radius: 27px;
+    left: 13px;
+}
+.cancelHelperButton{
+    font-size: 10px;
+    color: #d6081d;
+    left: 13px;
+    position: relative;
+    top: -10px;
+}
+#acceptHelpButton{
+    display: none;
+    font-size: 10px;
+    color: green;
+    top: 8px;
+    left: -12px;
+}
+#helpButton{
+    margin: auto;
+    background: green;
+    width: 90%;
+}
+#unHelpButton{
+    margin: auto;
+    background: FireBrick;
+    width: 90%;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+}
+
+.card {
+    background:#FFF;
+    /*border:1px solid #AAA;*/
+    /*border-bottom:3px solid #BBB;*/
+    padding:0px;
+    margin:15px;
+    overflow:hidden;
+    border-radius: 2px;
+}
+
+.float-left .card {
+    float:left;
+    width:350px;
+    /*height:270px;*/
+}
+
+.circular {
+    width: 54px;
+    height: 54px;
+    border-radius: 27px;
+    -webkit-border-radius: 27px;
+    -moz-border-radius: 27px;
+    margin: 6px;
+    float: left;
+}
+.helpers {
+    margin-bottom: 2px;
+}
+#candidates {
+    top: -10px;
+    position: relative;
+}
+
+h1 {
+    margin: 0;
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+.titlebg {
+    width: 200%;
+    padding-top: 146px;
+    top: -64px;
+    padding-top: 146px;
+    margin-left: -24px !important;
+    left: 16px;
+    padding-left: 18px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+}

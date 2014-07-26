@@ -5,113 +5,20 @@
 <link rel="import" href="../../components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../../components/core-collapse/core-collapse.html">
 <link rel="import" href="../request-description/request-description.html">
-<link rel="import" href="../../components/paper-shadow/paper-shadow.html" >
 <link rel="import" href="../../components/core-icons/core-icons.html">
 <link rel="import" href="../../components/paper-button/paper-button.html">
+<link rel="import" href="../../components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../request-chat/request-chat.html">
+<link rel="import" href="../my-card/my-card.html">
 
 
 <polymer-element name="request-page" attributes="title address user description helperAmount mapUrl">
     <template>
-        <style shim-shadowdom>
-            html, body {
-                height: 100%;
-            }
-            :host {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                box-sizing: border-box;
-            }
-            body {
-                margin: 0;
-                font-family: sans-serif;
-                color: #333;
-            }
-
-            core-scroll-header-panel {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-            }
-
-            /* background for toolbar when it is at its full size */
-            core-scroll-header-panel::shadow #headerBg {
-
-                background-color: #ffffff;
-
-            }
-
-            /* background for toolbar when it is condensed */
-            core-scroll-header-panel::shadow #condensedHeaderBg {
-                background-color: #ffffff;
-            }
-
-            core-toolbar {
-                color: #f1f1f1;
-                fill: #f1f1f1;
-                background-color: transparent;
-            }
-
-            .title {
-                -webkit-transform-origin: 0;
-                transform-origin: 0;
-                font-size: 40px;
-            }
-
-            .content {
-                /*padding: 10px 30px;*/
-                width: 100%;
-                height: 100%;
-            }
-
-            .card {
-                background:#FFF;
-                /*border:1px solid #AAA;*/
-                /*border-bottom:3px solid #BBB;*/
-                padding:0px;
-                margin:15px;
-                overflow:hidden;
-                border-radius: 2px;
-            }
-
-            .float-left .card {
-                float:left;
-                width:350px;
-                /*height:270px;*/
-            }
-
-            .circular {
-                width: 54px;
-                height: 54px;
-                border-radius: 27px;
-                -webkit-border-radius: 27px;
-                -moz-border-radius: 27px;
-                margin: 6px;
-                float: left;
-            }
-
-            h1 {
-                margin: 0;
-                padding: 10px;
-                padding-bottom: 0;
-            }
-
-            .titlebg {
-                width: 100%;
-                border-radius: 10px;
-                padding-top: 203px;
-                top: -93px;
-                position: relative;
-                background: rgba(0, 0, 0, 0.3);
-            }
-
-        </style>
+        <link rel='stylesheet' type='text/css' href='request-page.css'>
         <core-scroll-header-panel condenses>
 
-            <paper-shadow></paper-shadow>
-            <core-toolbar style="background-image: url({{mapUrl}});"  class="tall">
+
+            <core-toolbar style="background-image: url({{mapUrl}})"  class="tall">
                 <div class="middle" >
                     адрес: {{address}}<br>
                     кол-во человек: {{helperAmount}}
@@ -121,47 +28,56 @@
 
             <div class="content" id="content">
                 <div class="float-left" id="float-left">
-                    <div class="card paper-shadow-top-z-1">
+                    <my-card>
                         <request-description>
                             {{description}}<br>
                             <paper-button raisedButton id="helpButton" class='colored' label='Помочь'></paper-button>
+                            <paper-button raisedButton id="unHelpButton" class='colored' label='Отменить помощь'></paper-button>
                         </request-description>
-                    </div>
-                    <div class="card paper-shadow-top-z-1">
+                    </my-card>
+                    <my-card>
                         <h1>Помогли</h1>
                         <template repeat="{{help in helps}}">
                             <template repeat="{{user in help.users}}">
                                 <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
-                                    <img class="circular" src="img/{{user.avatar}}">
+                                    <img class="circular " src="img/{{user.avatar}}">
                                 </core-tooltip>
                             </template>
                         </template>
-                        <h1>Собираються</h1>
-                        <template repeat="{{user in helpers}}">
-                            <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
-                                <img class="circular" src="img/{{user.avatar}}">
+
+                        <h1>Помогут <paper-icon-button icon="done-all" id="acceptHelpButton"></paper-icon-button></h1>
+                        <template id="helpers"  repeat="{{helper in helpers}}">
+                            <core-tooltip label="{{helper.name}} {{helper.surname}}" position="top">
+                                <img class="circular helpers" src="img/{{helper.avatar}}"><br>
+                                <template if="{{user._id == currentUser._id}}">
+                                    <paper-icon-button  class="{{display}} cancelHelperButton" icon="thumb-down" onclick="cancelHelper('{{helper._id}}')"></paper-icon-button>
+                                </template>
                             </core-tooltip>
                         </template>
                         <div id="candidates">
                             <h1>Предлогают</h1>
-                            <template repeat="{{user in candidates}}">
-                                <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
-                                    <img class="circular" src="img/{{user.avatar}}">
+                            <template repeat="{{candidate in candidates}}">
+                                <core-tooltip label="{{candidate.name}} {{candidate.surname}}" position="top">
+                                    <template if="{{user._id == currentUser._id}}">
+                                        <paper-icon-button  icon="thumb-up" class="acceptUserButton" onclick="acceptCandidate('{{candidate._id}}')" ></paper-icon-button>
+                                    </template>
+                                    <img class="circular" src="img/{{candidate.avatar}}">
                                 </core-tooltip>
                             </template>
                         </div>
-                    </div>
-                    <div class="card paper-shadow-top-z-1">
+                    </my-card>
+                    <my-card>
                         <paper-button label="Обсуждение" id="chat_collapse_button"></paper-button>
                         <core-collapse id="chat_collapse">
-                            Ебаный сорт
+                            <request-chat messages="{{messages}}" requestId="{{_id}}"></request-chat>
                         </core-collapse>
-                    </div>
-                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
-                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
-                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
-                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
-                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
+                    </my-card>
+
+                    <my-card><request-description>{{description}}</request-description></my-card>
+                    <my-card><request-description>{{description}}</request-description></my-card>
+                    <my-card><request-description>{{description}}</request-description></my-card>
+                    <my-card><request-description>{{description}}</request-description></my-card>
+                    <my-card><request-description>{{description}}</request-description></my-card>
                 </div>
             </div>
         </core-scroll-header-panel>
@@ -170,6 +86,10 @@
         Polymer("request-page",{
             ready: function(){
                 var context = this.$;
+                context.candidates.style.display = "none";
+                context.unHelpButton.style.display = "none";
+                context.helpButton.style.display = "none";
+
                 (window.onresize = function(){
                     var clientWidth = context.content.clientWidth;
                     var cardWidth = 390;
@@ -181,41 +101,102 @@
                 context.chat_collapse_button.addEventListener('click', function(){ context.chat_collapse.toggle(); });
             },
             userChanged:function(old,user) {
-                var tost = document.querySelector("#toast");
+                var toast = document.querySelector("#toast");
                 var context = this.$;
                 var pageRequest = this;
                 var request_id = this._id;
-                context.candidates.style.display = "none";
-
                 if($.jStorage.get("user") != null){
-                    if(user._id == $.jStorage.get("user")._id) {
-                        context.helpButton.style.display = "none";
-                        context.candidates.style.display = "block";
-                    }else{
-                        context.helpButton.addEventListener('click', function(){
-                            //TODO change button state and reload request elements
-                            rpc.call('requests.addCandidate', $.jStorage.get("user"),request_id, function (resp){
-                                if(resp.error){
-                                    tost.text= resp.error.message;
-                                    tost.show();
-                                } else {
-                                    pageRequest.candidates.push($.jStorage.get("user"));
-                                    tost.text= "Помощь принята!";
-                                    tost.show();
-                                }
+                    var usr = $.jStorage.get("user");
+                    delete usr.authKey;
+                    if(inArray(pageRequest.helpers,usr))
+                        return;
 
-                            });
-                            this.removeEventListener('click',arguments.callee,false);
-                        });
+                    if(pageRequest.user._id == $.jStorage.get("user")._id) {
+                        context.candidates.style.display = "block";
+                        context.acceptHelpButton.style.display = "inline-block";
+                    } else if(!inArray(pageRequest.candidates,usr)) {
+                        context.helpButton.style.display = "block";
+                    } else {
+                        context.unHelpButton.style.display = "block";
                     }
+
+                    context.helpButton.addEventListener('click', function(){
+                        //TODO change button state and reload request elements
+                        rpc.call('requests.addCandidate', $.jStorage.get("user"),request_id, function (resp){
+                            if(resp.error){
+                                toast.text= resp.error.message;
+                                toast.show();
+                                return;
+                            }
+                            toast.text= "Помощь принята!";
+                            toast.show();
+                            context.helpButton.style.display = "none";
+                            context.unHelpButton.style.display = "block";
+                        });
+                    });
+
+                    context.unHelpButton.addEventListener('click', function () {
+                        rpc.call('requests.removeCandidate', $.jStorage.get("user"), request_id, function (resp) {
+                            if (resp.error) {
+                                toast.text = resp.error.message;
+                                toast.show();
+                            } else {
+                                toast.text = "Отказ Принят!";
+                                toast.show();
+                                context.helpButton.style.display = "block";
+                                context.unHelpButton.style.display = "none";
+                            }
+                        });
+
+                    });
                 }else{
                     context.helpButton.style.display = "none";
                 }
             },
-            candidatesChanged:function(old,candidates) {
-                candidates;
-            }
+            currentUser: $.jStorage.get("user")
         });
 
+        function acceptCandidate(candidate_id){
+            var toast = document.querySelector("#toast");
+            var rp = document.querySelector("request-page");
+            for(el in rp.candidates)
+                if(rp.candidates[el]._id==candidate_id)
+                    var candidate = rp.candidates[el];
+            rpc.call('requests.acceptCandidate', rp._id, candidate,  function (resp) {
+                if (resp.error) {
+                    toast.text = resp.error.message;
+                    toast.show();
+                    return;
+                }
+                toast.text = "Кандидат принят";
+                toast.show();
+                rp.candidates = resp.result.candidates;
+                rp.helpers  = resp.result.helpers;
+            });
+        }
+        function cancelHelper(helper_id){
+            var toast = document.querySelector("#toast");
+            var rp = document.querySelector("request-page");
+            for(el in rp.helpers)
+                if(rp.helpers[el]._id==helper_id)
+                    var candidate = rp.helpers[el];
+            rpc.call('requests.cancelHelper', rp._id, candidate,  function (resp) {
+                if (resp.error) {
+                    toast.text = resp.error.message;
+                    toast.show();
+                    return;
+                }
+                toast.text = "Помошник откланен";
+                toast.show();
+                rp.candidates = resp.result.candidates;
+                rp.helpers  = resp.result.helpers;
+            });
+        }
+        function inArray(arr,b){
+            for(var el in arr){
+                if(JSON.stringify(arr[el]) === JSON.stringify(b)) return true;
+            }
+            return false;
+        }
     </script>
 </polymer-element>

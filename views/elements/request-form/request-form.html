@@ -40,6 +40,7 @@
                 <paper-radio-button value="user" label="Для себя" id="paper_radio_button"></paper-radio-button>
             </paper-radio-group><br>
             <paper-input label="Адрес" required invalid floatinglabel id="addressInput"></paper-input><br>
+            <div id="mapInputDiv" style="width: 100%; height: 400px"></div>
             <paper-input label="Описание" floatinglabel required invalid multiline rows="3" id="descriptionInput" class="invalid"></paper-input><br>
             <label>Кол-во помошников<paper-slider min="1" max="20" value="1" editable="true" id="helperAmountInput"></paper-slider></label><br/>
             <paper-button type="submit" raisedButton label="сохранить" id="paper_button" ></paper-button><br>
@@ -48,19 +49,51 @@
     </template>
 
     <script>
+        var mapInput;
         Polymer('request-form', {
             ready: function(){
 //                console.log(this.$);
-                var obj = this.$;
-                this.$.paper_button.addEventListener("click", function(){saveRequest(obj)});
+                var context = this.$;
+                this.$.paper_button.addEventListener("click", function(){saveRequest(context)});
+                var mapDiv = context.mapInputDiv;
+                mapInput = new GMaps({
+                    div: mapDiv,
+                    lat: userPosition.coords.latitude,
+                    lng: userPosition.coords.longitude,
+                    width: screen.availWidth,
+                    height: screen.availHeight
+                });
+                mapInput.addMarker({
+                    lat: userPosition.coords.latitude,
+                    lng: userPosition.coords.longitude,
+                    draggable: true
+                });
+
+                context.addressInput.addEventListener('change', function(){
+                    GMaps.geocode({
+                        address: context.addressInput.inputValue,
+                        callback: function(results, status) {
+                            if (status == 'OK') {
+                                var latlng = results[0].geometry.location;
+                                mapInput.setCenter(latlng.lat(), latlng.lng());
+
+                                mapInput.removeMarkers();
+                                mapInput.addMarker({
+                                    lat: latlng.lat(),
+                                    lng: latlng.lng(),
+                                    draggable: true
+                                });
+                            }
+                        }
+                    });
+                });
             }
         });
         function saveRequest(obj){
-
             var tost = document.querySelector("#toast");
 
             for(var i in obj){
-                if(obj[i].classList.contains("invalid")) {
+                if(obj[i].classList && obj[i].classList.contains("invalid")) {
                     tost.text= "Ошибка при заполнении формы";
                     tost.show();
                     return false;
@@ -69,25 +102,38 @@
             var request = createRequestFromForm(obj);
             rpc.call('requests.create', request, function(resp) {
                 if(resp.error){
-                    tost.text = resp.error.message + "всё хуёво";
+                    tost.text = resp.error.message;
                     tost.show();
                     return;
                 }
                 tost.text = "Просьба помощи успешно создана";
-                window.updateRequestPage(resp.result[0]);
+                window.updateRequestPage(resp.result);
                 tost.show();
             });
         }
 
-        function createRequestFromForm(obj){
+        function createRequestFromForm(context){
+            var user = $.jStorage.get("user");
+            var marker = mapInput.markers[0];
+            var desc = context.descriptionInput.inputValue;
             return {
-                user: $.jStorage.get("user"),
-                title: obj.titleInput.inputValue,
-                type: obj.typeGroup.selected,
-                address: obj.addressInput.inputValue,
-                helperAmount: obj.helperAmountInput.value,
-                description: obj.descriptionInput.inputValue,
-                state: 'open'
+                user: user,
+                title: context.titleInput.inputValue,
+                type: context.typeGroup.selected,
+                address: context.addressInput.inputValue,
+                helperAmount: context.helperAmountInput.value,
+                description: desc,
+                state: 'open',
+                coord: {
+                    lat: marker.position.k,
+                    lng: marker.position.B,
+                    infoWindow: {
+                        content: "<img class='circular' src='img/"+user.avatar+"' />" +
+                                "<h2>"+context.titleInput.inputValue+"</h2>" +
+                                "<p>"+desc+"</p>" +
+                                "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(\"_id\")'></paper-button>"
+                    }
+                }
             };
         }
 

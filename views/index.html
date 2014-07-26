@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>unquote</title>
+    <title>Pomogalka</title>
     <meta name="viewport" content="width=device-width, minimum-scale=0, initial-scale=1.0, user-scalable=yes">
     <script src="js/md5.js"></script>
     <script src="components/platform/platform.js"></script>
@@ -39,25 +39,20 @@
     <link rel="import" href="elements/registration-form/registration-form.html">
     <link rel="import" href="elements/request-page/request-page.html">
     <link rel="import" href="elements/login-form/login-form.html">
+    <link rel="import" href="elements/user-page/user-page.html">
 
-    <style>
-
-    </style>
 </head>
 
 <body unresolved touch-action="auto">
     <core-scaffold responsiveWidth="1333px" id="core_scaffold">
         <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
             <core-toolbar id="core_toolbar">
-                <core-icon icon="search" id="core_icon"></core-icon>
-                <core-input placeholder="Search" id="core_input"></core-input>
+                <img src="img/no-avatar.png" class="circular-menu" id="profile_image"/>
+                <paper-button label="вход" onclick="changePage(4, true)" id="profile_button"></paper-button>
             </core-toolbar>
-            <core-menu selected="Map" valueattr="label" selectedindex="0" id="core_menu" class="" theme="core-light-theme">
-                <core-item label="Map" icon="settings" size="24" id="main_item" horizontal center layout active></core-item>
-                <core-item label="Request Form" icon="settings" size="24" id="request_form_item" horizontal center layout></core-item>
-                <core-item label="Request Page" icon="settings" size="24" id="request_page_item" horizontal center layout></core-item>
-                <core-item label="Registration From" icon="settings" size="24" id="registration_form_item" horizontal center layout></core-item>
-                <core-item label="Login Page" icon="settings" size="24" id="login_form_item" horizontal center layout></core-item>
+            <core-menu selected="Карта" valueattr="label" selectedindex="0" id="core_menu" class="" theme="core-light-theme">
+                <core-item label="Карта" icon="language" size="24" id="main_item" horizontal center layout active></core-item>
+                <core-item label="Попросить помощи" icon="account-circle" size="24" id="request_form_item" horizontal center layout></core-item>
             </core-menu>
 
         </core-header-panel>
@@ -71,12 +66,10 @@
         <core-pages class="content" id="page">
             <div class="content"><div class="map" id="map"></div></div>
             <div><request-form></request-form></div>
-            <div>
-                <request-page>
-                </request-page>
-            </div>
+            <div><request-page></request-page></div>
             <div><registration-form></registration-form></div>
             <div><login-form></login-form></div>
+            <div><user-page></user-page></div>
         </core-pages>
 
         <paper-toast id="toast" class="capsule" text="text" style="margin: auto"></paper-toast>
@@ -86,37 +79,8 @@
 
 </html>
 <script>
-    //    var core_icon_button = document.getElementById('core_icon_button');
-    //
-    //    core_icon_button.addEventListener('core-select', function() {
-    //        //alert("Selected: " + tabs.selected);
-    //    });
-
-
-    document.querySelector("#main_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page");
-        page.selected = 0;
-    };
-
-    document.querySelector("#request_form_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page");
-        page.selected = 1;
-    };
-
-    document.querySelector("#request_page_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page");
-        page.selected = 2;
-    };
-
-    document.querySelector("#registration_form_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page");
-        page.selected = 3;
-    };
-
-    document.querySelector("#login_form_item").onclick = function(e) {
-        page = document.querySelector("core-pages#page")
-        page.selected = 4;
-    };
+    document.querySelector("#main_item").onclick = function(e) { changePage(0, true); };
+    document.querySelector("#request_form_item").onclick = function(e) { changePage(1, true); };
 
     var map = new GMaps({
         div: '#map',
@@ -127,9 +91,11 @@
     });
 
 
+    var userPosition = { coords: { latitude: 46.484948, longitude: 30.741102 } };
 
     GMaps.geolocate({
         success: function(position) {
+            userPosition = position;
             map.setCenter(position.coords.latitude, position.coords.longitude);
             map.addMarker({
                 lat: position.coords.latitude,
@@ -138,7 +104,7 @@
                 title: "Собор ёба!",
                 animation: 'BOUNCE',
                 infoWindow: {
-                    content: "<div class='circular' style='background: url(img/photo.jpg) no-repeat;'></div>" +
+                    content: "<img class='circular' src='img/photo.jpg'/>" +
                             "<h2>Собор</h2>" +
                             "<p>Описание описывает описывает описывает описывает описывает описывает описывает описывает " +
                             "описывает описывает описывает описывает описывает описывает описывает описывает описывает " +
@@ -166,13 +132,12 @@
 
     function updateRequestPage(request){
         var rp = document.querySelector("request-page");
-        if(!request.coord)
-            request.coord = { lat: 46.484948, lng: 30.741102 };
         rp.mapUrl = GMaps.staticMapURL({
-            size: [document.querySelector("request-page").clientWidth, 192],
+            size: [parseInt(document.querySelector("request-page").clientWidth/2), 111],
             lat: request.coord.lat || 46.484948,
             lng: request.coord.lng || 30.741102,
-            markers: {
+            zoom: 14,
+            marker: {
                 lat: request.coord.lat || 46.484948,
                 lng: request.coord.lng || 30.741102
             }
@@ -184,7 +149,7 @@
         for (attr in request) {
             rp[attr] = request[attr];
         }
-        chagePage(2);
+        changePage(2);
         setUrlHash("request" + request._id);
     }
 
@@ -194,39 +159,63 @@
         document.location.href = url;
     }
 
-    function chagePage(n) {
+    function changePage(n, changeHash) {
         page = document.querySelector("core-pages#page");
         page.selected = n;
+        if (changeHash) {
+            var hash = "";
+            switch (n) {
+                case 0: hash = "map"; break;
+                case 1: hash = "requestForm"; break;
+                case 3: hash = "registration"; break;
+                case 4: hash = "login"; break;
+            }
+            setUrlHash(hash);
+        }
     }
 
     function checkHash() {
+        console.log("Asad");
         var url = new Url(document.location.href);
         if (url.hash != "") {
-            if (url.hash.indexOf("request") == 0) {
-                openRequest(url.hash.substring(7));
+            switch(url.hash){
+                case "map": changePage(0); break;
+                case "requestForm": changePage(1); break;
+                case "registration": changePage(3); break;
+                case "login": changePage(4);  break;
+                default:
+                    if(url.hash.indexOf("request") == 0) openRequest(url.hash.substring(7));
             }
         }
     }
 
+    function setUserProfile(user){
+        var img = document.querySelector("#profile_image");
+        var btn = document.querySelector("#profile_button");
+        img.src = "img/" + user.avatar;
+        btn.label = user.name + " " + user.surname;
+        btn.onclick = function(){
+            $.jStorage.set("user", null);
+            setUrlHash("login");
+            window.location.reload();
+        };
+        page.selected = 0;
+    }
+
     $(document).ready(function(){
-        var socket = io('http://localhost:9000');
-
-        socket.on('connect', function(){
-            window.rpc = new rpcClient(socket);
-            rpc.call('requests.getAllMarkers',function(resp){
-                console.log(resp.result);
-                map.addMarkers(resp.result);
+        window.addEventListener('polymer-ready', function () {
+            var socket = io('http://localhost:9000');
+            socket.on('connect', function(){
+                window.rpc = new rpcClient(socket);
+                rpc.call('requests.getAllMarkers',function(resp){
+                    map.addMarkers(resp.result);
+                    checkHash();
+                });
             });
-//            socket.send( JSON.stringify({id:1,method:"rpc,getAllMarkers",params:""}) )
-        });
-
-//        socket.on('message', function(r){ console.log("response: " + r) });
-        socket.connect();
-
-        window.addEventListener('polymer-ready', function() {
-            checkHash();
+            socket.connect();
+            var user = $.jStorage.get("user");
+            if(user) setUserProfile(user);
         });
     });
-
 
 </script>

@@ -25,7 +25,8 @@
         <div class="formConteiner">
             <paper-input label="Email" floatinglabel validate="^.{1,}@.{2,}$" id="emailInput"></paper-input><br>
             <paper-input label="Пароль" floatinglabel type="password" validate="^.{4,20}$" id="passInput"></paper-input><br>
-            <paper-button type="submit" raisedButton label="Вход" id="login_button" ></paper-button>
+            <paper-button type="submit" raisedButton label="Вход" id="login_button"></paper-button>
+            <paper-button raisedButton label="регистрация" id="registration_button" onclick="window.changePage(3)"></paper-button>
         </div>
 
     </template>
@@ -50,16 +51,16 @@
                 email: obj.emailInput.inputValue,
                 pass: hex_md5(obj.passInput.inputValue)
             };
-//            console.log(logIn);
             rpc.call('users.login', logIn,function(resp) {
-                if(resp.error != null){
+                if(resp.error){
                     tost.text = resp.error.message;
                     tost.show();
-                } else {
-                    $.jStorage.set("user", resp.result);
-                    tost.text= "Вход выполнен успешно";
-                    tost.show();
+                    return;
                 }
+                $.jStorage.set("user", resp.result);
+                window.setUserProfile(resp.result);
+                tost.text = "Вход выполнен успешно";
+                tost.show();
             });
         };
 

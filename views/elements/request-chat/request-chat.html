@@ -1,0 +1,60 @@
+
+<polymer-element name="request-chat" attributes="messages requestId">
+    <template>
+        <style>
+            .circular {
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                -webkit-border-radius: 25px;
+                -moz-border-radius: 25px;
+                margin: 1em;
+                float: left;
+            }
+            p {
+                padding-left: 2em;
+                padding-right: 5px;
+            }
+            h4 { margin: 0; }
+            i { font-size: smaller; }
+            paper-input { margin: 1em }
+        </style>
+
+        <template repeat="{{mes in messages}}">
+            <div>
+                <img src="img/{{mes.user.avatar}}" class="circular"/>
+                <h4>{{mes.user.name}} {{mes.user.surname}}</h4>
+                <i>{{mes.date}}</i>
+                <p>{{mes.text}}</p>
+            </div>
+        </template>
+        <paper-input multiline on-keypress="{{keypressHandler}}" id="messageInput"></paper-input>
+    </template>
+
+    <script>
+        Polymer('request-chat', {
+            ready: function () {
+                var obj = this.$;
+            },
+            keypressHandler: function(event, detail, sender) {
+                if(event.keyCode != 10 || !event.ctrlKey) return;
+                var text = this.$.messageInput.inputValue;
+                var user = $.jStorage.get("user");
+                var message = { text: text, user: user };
+                rpc.call('requests.addMessage', this.requestId, message, function (resp){
+                    if(resp.error){
+                        toast.text = resp.error.message;
+                        toast.show();
+                        return;
+                    }
+                    message.date = "только что";
+                    console.log(this.messages);
+                    this.messages = this.messages.push(message);
+                    toast.text = "Comment добавлен";
+                    toast.show();
+                });
+            }
+        });
+    </script>
+
+</polymer-element>

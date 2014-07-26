@@ -1,0 +1,140 @@
+<link rel="import" href="../../components/core-scroll-header-panel/core-scroll-header-panel.html">
+<link rel="import" href="../../components/core-scroll-header-panel/demos/lorem-ipsum.html">
+<link rel="import" href="../../components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../../components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../../components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../components/core-collapse/core-collapse.html">
+<link rel="import" href="../request-description/request-description.html">
+<link rel="import" href="../../components/core-icons/core-icons.html">
+<link rel="import" href="../../components/paper-button/paper-button.html">
+<link rel="import" href="../request-chat/request-chat.html">
+<link rel="import" href="../my-card/my-card.html">
+
+
+<polymer-element name="user-page" attributes="user">
+    <template>
+        <link rel='stylesheet' type='text/css' href='user-page.css'>
+
+        <core-scroll-header-panel condenses>
+
+            <core-toolbar class="tall">
+                <div class="middle" >
+                    <img src="img/{{user.avatar}}" class="circular-avatar"/>
+                    <p>репутация: {{user.reputation}}</p>
+                </div>
+                <div class="bottom title">{{user.name}} {{user.surname}}</div>
+            </core-toolbar>
+
+            <div class="content" id="content">
+                <div class="float-left" id="float-left">
+                    <my-card>
+                        <h1>Информация</h1>
+                        <table>
+                            <tr><td>Телефон</td><td>{{user.phone}}</td></tr>
+                            <tr><td>E-mail</td><td>{{user.email}}</td></tr>
+                            <tr><td>Адрес</td><td>{{user.address}}</td></tr>
+                        </table>
+                    </my-card>
+                    <my-card>
+                        <h1>Просьбы о помощи</h1>
+                        <template repeat="{{request in user.requests}}">
+                            <paper-button raisedButton label="{{request.title}}" onclick="alert('{{request.request_id}}')"></paper-button><br>
+                        </template>
+                    </my-card>
+                    <my-card>
+                        <h1>Оказаная помощь</h1>
+                        <template repeat="{{request in user.helps}}">
+                            <paper-button raisedButton label="{{request.title}}" onclick="alert('{{request.request_id}}')"></paper-button><br>
+                        </template>
+                    </my-card>
+                    <template repeat="{{ch in user.chronicle}}">
+                        <my-card>
+                            <h1>{{ch.type == 'toUser' ? 'Помогли' : ch.type == 'fromUser' ? 'Помог' : 'Попросил'}}</h1>
+                            <i>{{ch.date}}</i>
+                            <paper-button raisedButton label="{{ch.title}}" onclick="alert('{{ch.request_id}}')"></paper-button><br>
+                            <template if="{{ch.type != 'create'}}">
+                                <h1>{{ch.type == 'toUser' ? 'Вот эти ребята' : 'Вместе с'}}</h1>
+                                <template repeat="{{us in ch.helpers}}">
+                                    <core-tooltip label="{{us.name}} {{us.surname}}" position="top">
+                                        <img class="circular " src="img/{{us.avatar}}">
+                                    </core-tooltip>
+                                </template>
+                            </template>
+                            <template if="{{ch.type == 'create'}}">
+                                <b>Описание:</b>{{ch.description}}
+                            </template>
+                        </my-card>
+                    </template>
+                    <my-card><request-description>Тут какая-то информация об этом пользователе.</request-description></my-card>
+                </div>
+            </div>
+        </core-scroll-header-panel>
+    </template>
+    <script>
+        Polymer("user-page",{
+            ready: function(){
+                var context = this.$;
+                var ch2 = {
+                    request_id: 1,
+                    title: "Заголовок оказаной помощи",
+                    helpers: [
+                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                    ],
+                    type: "toUser", //fromUser, create
+                    date: new Date()
+                };
+                var ch1 = {
+                    request_id: 1,
+                    title: "Заголовок оказаной помощи",
+                    helpers: [
+                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                    ],
+                    type: "fromUser",
+                    date: new Date()
+                };
+                var ch3 = {
+                    request_id: 1,
+                    title: "Заголовок созданной помощи",
+                    type: "create",
+                    date: new Date(),
+                    description: "Описание ола ываты авышта выштваыь лва мвашыдм иошд алыо аыои аы ыао м аы м ылмы  лмытма аыомтыа лдаытмтамв дшвытамшваым штвамшыоав дшвыаомлы  жщыоишрмлжиы"
+                };
+                this.user = {
+                    _id: 2,
+                    name: "John2",
+                    surname: "Malcovich2",
+                    avatar: "photo.jpg",
+                    phone: "099-23-45-852",
+                    address: "address",
+                    email: "e@mail.com",
+                    reputation: 0.1,
+                    requests: [
+                        { request_id: 1, title: "title1" },
+                        { request_id: 2, title: "title2" }
+                    ],
+                    helps: [
+                        {request_id: 1, title: "asd", date: new Date()},
+                        {request_id: 2, title: "asd", date: new Date()},
+                        {request_id: 3, title: "asd", date: new Date()}
+                    ],
+                    chronicle: [ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3]
+                };
+                (window.onresize = function(){
+                    var clientWidth = context.content.clientWidth;
+                    var cardWidth = 390;
+                    var margin = clientWidth > cardWidth ? (clientWidth % cardWidth) / 2 : 2;
+                    context["float-left"].style.marginLeft = margin.toFixed() + "px";
+                })();
+            }
+        });
+
+        function inArray(arr,b){
+            for(var el in arr){
+                if(JSON.stringify(arr[el]) === JSON.stringify(b)) return true;
+            }
+            return false;
+        }
+    </script>
+</polymer-element>

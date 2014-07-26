@@ -25,6 +25,54 @@ var requestsFunctions = {
         }else
             resp.sendError({message: "Wrong data received"});
     },
+    removeCandidate: function (params) {
+        //TODO check candidate authKey
+        var resp = this;
+        if(params.length==2) {
+            delete params[0].authKey;
+            db.requests.update({_id: mongojs.ObjectId(params[1])}, {$pull: {candidates: params[0]}},{multi:true}, function (err) {
+                if (err) {
+                    resp.sendError({"message": err});
+                }
+                else {
+                    resp.send("ok");
+                }
+            });
+        }else
+            resp.sendError({message: "Wrong data received"});
+    },
+    acceptCandidate: function(params){
+        var resp = this;
+        if(params.length==2) {
+            db.requests.update({_id: mongojs.ObjectId(params[0])}, {$addToSet: {helpers: params[1]}}, {multi: true}, function (err) {
+                if(err){
+                    resp.sendError({"message": err});
+                    return;
+                }
+                db.requests.findAndModify({query: {_id: mongojs.ObjectId(params[0])}, update: {$pull: {candidates: params[1]}}, new: true},  function (err,data) {
+                    if (err) {
+                        resp.sendError({"message": err});
+                        return;
+                    }
+                    resp.send({helpers: data.helpers, candidates:data.candidates});
+                });
+            });
+        }else
+            resp.sendError({message: "Wrong data received"});
+    },
+    cancelHelper: function(params){
+        var resp = this;
+        if(params.length==2) {
+            db.requests.findAndModify({query: {_id: mongojs.ObjectId(params[0])}, update: {$pull: {helpers: params[1]}}, new: true},  function (err,data) {
+                if (err) {
+                    resp.sendError({"message": err});
+                    return;
+                }
+                resp.send({helpers: data.helpers, candidates:data.candidates});
+            });
+        }else
+            resp.sendError({message: "Wrong data received"});
+    },
     getAllMarkers: function () {
         var resp = this;
         db.requests.find(
@@ -47,11 +95,36 @@ var requestsFunctions = {
     },
     create: function(request) {
         var resp = this;
-        db.requests.insert(request, function (err, data){
+        var id = new mongojs.ObjectId();
+        request[0]._id = id;
+        request[0].coord.infoWindow.content = request[0].coord.infoWindow.content.replace("_id", id);
+        db.requests.insert(request[0], function (err, data){
             if(err) { resp.sendError(err); return; }
             resp.send(data);
         });
+    },
+    addMessage: function(params){
+        var resp = this;
+            if(params.length != 2) {
+            resp.sendError({message: "Wrong data received"});
+            return;
+        }
+        var requestId = params[0];
+        var message = params[1];
+        delete message.user.authKey;
+        message.date = new Date();
+
+        db.requests.update(
+            {_id: mongojs.ObjectId(requestId)},
+            {$addToSet: {messages: message}},
+            {multi:true},
+            function(err) {
+                if (err) resp.sendError({"message": err});
+                else resp.send("ok");
+        });
+
     }
+
 };
 
 var usersFunctions = {

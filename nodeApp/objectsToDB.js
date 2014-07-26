@@ -37,18 +37,32 @@ db.requests.drop(function(){
             { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helps: [{
-            users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-            ],
-            date: new Date("27/01/2007")
-        },{
-            users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-            ],
-            date: new Date("27/01/2008")
-        }
+                users: [
+                    { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                ],
+                date: new Date("27/01/2007")
+            },{
+                users: [
+                    { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                ],
+                date: new Date("27/01/2008")
+            }
+        ],
+        messages: [ {
+                user: { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                text: "Hello. Im a banana",
+                date: new Date()
+            },{
+                user: { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                text: "Hello. Im a banana",
+                date: new Date()
+            },{
+                user: { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                text: "Hello. Im a banana",
+                date: new Date()
+            }
         ]
     };
     var request2 = {
@@ -86,18 +100,18 @@ db.requests.drop(function(){
             { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helps: [{
-            users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-            ],
-            date: new Date("27/01/2007")
-        },{
-            users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-            ],
-            date: new Date("27/01/2008")
-        }
+                users: [
+                    { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                ],
+                date: new Date("27/01/2007")
+            },{
+                users: [
+                    { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                    { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
+                ],
+                date: new Date("27/01/2008")
+            }
         ]
     };
     db.requests.insert([request1, request2]);
