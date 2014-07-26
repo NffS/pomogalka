@@ -238,6 +238,8 @@
 
     function checkNear(){
         var lastTime = $.jStorage.get("lastTime");
+        var user = $.jStorage.get("user");
+        if(!user) return;
 
         GMaps.geolocate({
             success: function(position) {
@@ -245,6 +247,8 @@
                 function callback(resp){
                     if(resp.error) return;
                     if(resp.result.requests.length > 0){
+                        if(resp.result.requests[0].user_id == user._id)
+                            return;
                         showDialog(resp.result.requests[0].content);
                     }
                     $.jStorage.set("lastTime", resp.result.time);

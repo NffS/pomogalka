@@ -199,6 +199,7 @@ var requestsFunctions = {
             var res = data.map( function(el) {
                 return {
                     _id: el._id,
+                    user_id: el.user._id,
                     title: el.title,
                     address: el.address,
                     content: el.coord.infoWindow.content
