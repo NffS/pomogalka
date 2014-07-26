@@ -193,6 +193,9 @@ var requestsFunctions = {
         if(time) query.date = {$gt: new Date(time)};
 
         db.requests.find(query, function(err, data){
+            if(err){
+                return;
+            }
             var res = data.map( function(el) {
                 return {
                     _id: el._id,
