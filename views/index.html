@@ -224,9 +224,24 @@
                 });
             });
 
-
             socket.on('newMarker', function (resp) {
                 map.addMarker(resp.message);
+            });
+            socket.on('findHelpers', function (resp) {
+                for(var el in resp.message){
+                    if(resp.message[el]._id === $.jStorage.get("user")._id){
+                        rpc.call('requests.confirmRating', $.jStorage.get("user"),function(resp){
+                            if(resp.error)
+                                return;
+                            var up = document.querySelector("user-page");
+                            up.user.reputation = resp.result.reputation;
+                            var toast = document.querySelector("#toast");
+                            toast.text = "Вы получили дополнительный рейтинг";
+                            toast.show();
+                        });
+                    }
+                }
+//
             });
 
             socket.connect();
