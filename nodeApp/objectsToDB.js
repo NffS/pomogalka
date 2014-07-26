@@ -74,6 +74,7 @@ db.requests.drop(function(){
             lat: 46.455410,
             lng: 30.754048,
             title: "Лорансятник",
+
             infoWindow: {
                 content: "<div class='circular' style='background: url(img/photo.jpg) no-repeat;'></div>" +
                     "<h2>Собор</h2>" +
