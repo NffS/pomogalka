@@ -6,7 +6,7 @@ var db = mongojs("127.0.0.1/pomogalka",["requests", "users"]);
 
 db.requests.drop(function(){
     var request1 = {
-        _id: 1,
+        _id: mongojs.ObjectId('53ce913521207bcc774d2251'),
         coord: {
             lat: 46.471120,
             lng: 30.740619,
@@ -18,10 +18,10 @@ db.requests.drop(function(){
                     "описывает описывает описывает описывает описывает описывает описывает описывает описывает " +
                     "описывает описывает описывает описывает описывает описывает " +
                     "описывает описывает описывает описывает описывает описывает</p>" +
-                    "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(1)'></paper-button>"
+                    "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(\"53ce913521207bcc774d2251\")'></paper-button>"
             }
         },
-        user: { user_id: 1, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
+        user: { user_id: 1, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
         address: "address",
         description: "description",
         title: "title",
@@ -29,30 +29,30 @@ db.requests.drop(function(){
         state: "open", // closed
         type: "user", // poor, city
         candidates: [
-            { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
-            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+            { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helpers: [
-            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" },
-            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helps: [{
             users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
             ],
             date: new Date("27/01/2007")
         },{
             users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
             ],
             date: new Date("27/01/2008")
         }
         ]
     };
     var request2 = {
-        _id: 2,
+        _id: mongojs.ObjectId('53ce913521207bcc774d225c'),
         coord: {
             lat: 46.455410,
             lng: 30.754048,
@@ -64,34 +64,37 @@ db.requests.drop(function(){
                     "описывает описывает описывает описывает описывает описывает описывает описывает описывает " +
                     "описывает описывает описывает описывает описывает описывает " +
                     "описывает описывает описывает описывает описывает описывает</p>" +
-                    "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(2)'></paper-button>"
+                    "<paper-button raisedButton class='colored' label='Подробнее' onclick='openRequest(\"53ce913521207bcc774d225c\")'></paper-button>"
             }
         },
-        user: { user_id: 1, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
+        user: { user_id: 1, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
         address: "address",
-        description: "description",
+        description: "Описание описывает описывает описывает описывает описывает описывает описывает описывает " +
+            "описывает описывает описывает описывает описывает описывает описывает описывает описывает " +
+            "описывает описывает описывает описывает описывает описывает " +
+            "описывает описывает описывает описывает описывает описывает",
         title: "title",
         helperAmount: 2,
         state: "open", // closed
         type: "user", // poor, city
         candidates: [
-            { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
-            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+            { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helpers: [
-            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" },
-            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
+            { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
         ],
         helps: [{
             users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
             ],
             date: new Date("27/01/2007")
         },{
             users: [
-                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "K1U2U23G43JEU.jpg" },
-                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "K1U2U23G43JEU.jpg" }
+                { user_id: 2, name: "John2", surname: "Malcovich2", avatar: "photo.jpg" },
+                { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
             ],
             date: new Date("27/01/2008")
         }
@@ -106,7 +109,7 @@ db.users.drop(function(){
         _id: 2,
         name: "John2",
         surname: "Malcovich2",
-        avatar: "K1U2U23G43JEU.jpg",
+        avatar: "photo.jpg",
         phone: "099-23-45-852",
         address: "address",
         email: "e@mail.com",
@@ -122,11 +125,6 @@ db.users.drop(function(){
         ]
     };
     db.users.insert(user1);
-});
-
-db.requests.insert({title: "title"}, function (err, data){
-    console.log(err);
-    console.log(data);
 });
 
 

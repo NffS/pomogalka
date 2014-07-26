@@ -1,0 +1,97 @@
+<link rel="import" href="../../components/paper-input/paper-input.html">
+<link rel="import" href="../../components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../components/paper-button/paper-button.html">
+
+
+
+
+<polymer-element name="registration-form">
+    <template>
+        <style>
+            :host {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+            }
+            .formConteiner{
+                width: 80%;
+                margin: auto;
+            }
+            paper-input{
+                width: 100%
+            }
+            #paper_radio_group {
+
+            }
+
+            #paper_button {
+
+                background-color: rgb(151, 182, 255);
+            }
+        </style>
+        <div class="formConteiner">
+            <paper-input label="Имя" floatinglabel required invalid id="nameInput" class="invalid"></paper-input>
+            <paper-input label="Фамилия" floatinglabel id="surnameInput"></paper-input>
+            <paper-input label="Email" type="email" validate="^.{1,}@.{2,}$" floatinglabel required invalid id="emailInput" class="invalid"></paper-input>
+            <paper-input label="Пароль" type="password" validate="^.{4,20}$" floatinglabel required invalid id="pass1Input" class="invalid"></paper-input>
+            <paper-input label="Контрольный пароль" type="password" validate="^.{4,20}$" floatinglabel required invalid id="pass2Input" class="invalid"></paper-input>
+            <paper-input label="Телефон" validate="^[0-9]{6,12}$"  floatinglabel id="phoneInput"></paper-input>
+            <paper-input label="Адрес" floatinglabel id="addressInput"></paper-input>
+            <paper-button type="submit"  raisedButton label="Регистрация" id="paper_button" ></paper-button><br>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer('registration-form',{
+            ready: function(){
+//                console.log(this.$);
+                var obj = this.$;
+                this.$.paper_button.addEventListener("click", function(){registration(obj)});
+            }
+        });
+
+        function registration(obj){
+            var tost = document.querySelector("#toast");
+            for(var i in obj){
+                if(obj[i].classList.contains("invalid")) {
+                    tost.text= "Ошибка при заполнении формы";
+                    tost.show();
+                    return false;
+                }
+            }
+            if(obj.pass1Input.inputValue != obj.pass2Input.inputValue){
+                tost.text= "Пароли не совпадают";
+                tost.show();
+                return false;
+            }
+
+            var user = createUserFromRegistrationForm(obj);
+            rpc.call('users.registration', user,function(resp){
+                if(resp.error !== null){
+                    tost.text=resp.error.message;
+                    tost.show();
+                }else{
+                    tost.text="Регистрация прошла успешно!";
+                    tost.show();
+                }
+            });
+        }
+
+        function createUserFromRegistrationForm(obj){
+            return {
+                name:obj.nameInput.inputValue,
+                surname:obj.surnameInput.inputValue,
+                email:obj.emailInput.inputValue,
+                pass:hex_md5(obj.pass1Input.inputValue),
+                phone:obj.phoneInput.inputValue,
+                address:obj.addressInput.inputValue
+            };
+        }
+
+
+    </script>
+
+</polymer-element>

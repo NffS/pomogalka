@@ -36,7 +36,7 @@
     <link rel="import" href="components/core-input/core-input.html">
     <link rel="import" href="components/paper-toast/paper-toast.html">
     <link rel="import" href="elements/request-form/request-form.html">
-    <link rel="import" href="elements/registration-form/registration-from.html">
+    <link rel="import" href="elements/registration-form/registration-form.html">
     <link rel="import" href="elements/request-page/request-page.html">
     <link rel="import" href="elements/login-form/login-form.html">
 
@@ -92,33 +92,11 @@
     //        //alert("Selected: " + tabs.selected);
     //    });
 
-    document.querySelector('request-page').helps = [{
-        users: [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}]
-    },{
-        users: [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'}, {name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}]
-    }];
-//    document.querySelector('request-page').helpers = [{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: 'Alex', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '2', surname: 'Vakhmenin', avatar: 'photo.jpg'},{name: '3', surname: 'Vakhmenin', avatar: 'photo.jpg'}];
 
     document.querySelector("#main_item").onclick = function(e) {
         page = document.querySelector("core-pages#page");
         page.selected = 0;
     };
-
-    function updateRequestPage(request){
-        var rp = document.querySelector("request-page");
-        if(!request.helps) rp.helps = [];
-        if(!request.helpers) rp.helpers = [];
-        if(!request.candidates) rp.candidates = []; //TODO
-        for (attr in request) {
-            rp[attr] = request[attr];
-        }
-        chagePage(2);
-    }
-
-    function chagePage(n) {
-        page = document.querySelector("core-pages#page");
-        page.selected = n;
-    }
 
     document.querySelector("#request_form_item").onclick = function(e) {
         page = document.querySelector("core-pages#page");
@@ -181,30 +159,51 @@
 
     function openRequest(requestId) {
         rpc.call('requests.getRequest', requestId, function (resp) {
-            var rp = document.querySelector("request-page");
-            rp.mapUrl = GMaps.staticMapURL({
-                size: [document.querySelector("request-page").clientWidth, 192],
-                lat: resp.result.coord.lat,
-                lng: resp.result.coord.lng,
-                markers: {lat: resp.result.coord.lat, lng:resp.result.coord.lng }
-            });
-            if(!request.helps) rp.helps = [];
-            if(!request.helpers) rp.helpers = [];
-            if(!request.candidates) rp.candidates = []; //TODO
-            for (attr in resp.result) {
-                rp[attr] = resp.result[attr];
-            }
-            page.selected = 2;
-            var url = new Url(document.location.href);
-            url.hash = "request" + requestId;
-            document.location.href = url;
+            if(resp.error) return;
+            updateRequestPage(resp.result);
         });
     }
+
+    function updateRequestPage(request){
+        var rp = document.querySelector("request-page");
+        if(!request.coord)
+            request.coord = { lat: 46.484948, lng: 30.741102 };
+        rp.mapUrl = GMaps.staticMapURL({
+            size: [document.querySelector("request-page").clientWidth, 192],
+            lat: request.coord.lat || 46.484948,
+            lng: request.coord.lng || 30.741102,
+            markers: {
+                lat: request.coord.lat || 46.484948,
+                lng: request.coord.lng || 30.741102
+            }
+        });
+        rp.helps = [];
+        rp.helpers = [];
+        rp.candidates = [];
+
+        for (attr in request) {
+            rp[attr] = request[attr];
+        }
+        chagePage(2);
+        setUrlHash("request" + request._id);
+    }
+
+    function setUrlHash(hash){
+        var url = new Url(document.location.href);
+        url.hash = hash;
+        document.location.href = url;
+    }
+
+    function chagePage(n) {
+        page = document.querySelector("core-pages#page");
+        page.selected = n;
+    }
+
     function checkHash() {
         var url = new Url(document.location.href);
         if (url.hash != "") {
             if (url.hash.indexOf("request") == 0) {
-                openRequest(+url.hash.substring(7));
+                openRequest(url.hash.substring(7));
             }
         }
     }
@@ -215,6 +214,7 @@
         socket.on('connect', function(){
             window.rpc = new rpcClient(socket);
             rpc.call('requests.getAllMarkers',function(resp){
+                console.log(resp.result);
                 map.addMarkers(resp.result);
             });
 //            socket.send( JSON.stringify({id:1,method:"rpc,getAllMarkers",params:""}) )

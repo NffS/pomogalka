@@ -52,7 +52,7 @@
             };
 //            console.log(logIn);
             rpc.call('users.login', logIn,function(resp) {
-                if(resp.error !== null){
+                if(resp.error != null){
                     tost.text = resp.error.message;
                     tost.show();
                 } else {

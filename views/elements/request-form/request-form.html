@@ -52,10 +52,10 @@
             ready: function(){
 //                console.log(this.$);
                 var obj = this.$;
-                this.$.paper_button.addEventListener("click", function(){save(obj)});
+                this.$.paper_button.addEventListener("click", function(){saveRequest(obj)});
             }
         });
-        function save(obj){
+        function saveRequest(obj){
 
             var tost = document.querySelector("#toast");
 

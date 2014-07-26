@@ -8,9 +8,22 @@ var mongojs = require('mongojs');
 var db = mongojs("127.0.0.1/pomogalka",["requests","users"]);
 
 var requestsFunctions = {
-    add: function (a) {
+    addCandidate: function (params) {
+        //TODO check candidate authKey
         var resp = this;
-        resp.send({"a":a[0], "b":a[1]});
+        if(params.length==2) {
+            //TODO use findAndModify
+            delete params[0].authKey;
+            db.requests.update({_id: mongojs.ObjectId(params[1])}, {$addToSet: {candidates: params[0]}},{multi:true}, function (err) {
+                if (err) {
+                    resp.sendError({"message": err});
+                }
+                else {
+                    resp.send("ok");
+                }
+            });
+        }else
+            resp.sendError({message: "Wrong data received"});
     },
     getAllMarkers: function () {
         var resp = this;
@@ -24,8 +37,10 @@ var requestsFunctions = {
         );
     },
     getRequest: function(id) {
+        //TODO check id!=null
         var resp = this;
-        db.requests.findOne({_id: id[0]},{_id: 0}, function (err, data){
+        console.log(id[0]);
+        db.requests.findOne({_id: mongojs.ObjectId(id[0])}, function (err, data){
             if(err) resp.sendError(err);
             resp.send(data);
         });
@@ -41,10 +56,12 @@ var requestsFunctions = {
 
 var usersFunctions = {
     registration: function (params) {
-        resp = this;
+        var resp = this;
+        //TODO check params!=null
         user = params[0];
         if(!validator.isNull(user.name) && validator.isEmail(user.email) && validator.isHexadecimal(user.pass)){
             user.reputation = 0;
+            user.avatar = "photo.jpg";
             user.requests=[];
             user.helps=[];
             db.users.insert(user);
@@ -57,6 +74,7 @@ var usersFunctions = {
     },
     login:function(params){
         var resp = this;
+        //TODO check params!=null
         if(validator.isEmail(params[0].email) && validator.isHexadecimal(params[0].pass)) {
             db.users.findOne(
                 {email: params[0].email, pass:params[0].pass},

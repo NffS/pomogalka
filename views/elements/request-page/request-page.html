@@ -136,12 +136,20 @@
                                 </core-tooltip>
                             </template>
                         </template>
-                        <h1>Хотят помочь</h1>
+                        <h1>Собираються</h1>
                         <template repeat="{{user in helpers}}">
                             <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
                                 <img class="circular" src="img/{{user.avatar}}">
                             </core-tooltip>
                         </template>
+                        <div id="candidates">
+                            <h1>Предлогают</h1>
+                            <template repeat="{{user in candidates}}">
+                                <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
+                                    <img class="circular" src="img/{{user.avatar}}">
+                                </core-tooltip>
+                            </template>
+                        </div>
                     </div>
                     <div class="card paper-shadow-top-z-1">
                         <paper-button label="Обсуждение" id="chat_collapse_button"></paper-button>
@@ -149,6 +157,11 @@
                             Ебаный сорт
                         </core-collapse>
                     </div>
+                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
+                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
+                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
+                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
+                    <div class="card paper-shadow-top-z-1"><request-description>{{description}}</request-description></div>
                 </div>
             </div>
         </core-scroll-header-panel>
@@ -164,15 +177,43 @@
                     context["float-left"].style.marginLeft = margin.toFixed() + "px";
 
                 })();
+
                 context.chat_collapse_button.addEventListener('click', function(){ context.chat_collapse.toggle(); });
             },
             userChanged:function(old,user) {
+                var tost = document.querySelector("#toast");
                 var context = this.$;
-                if($.jStorage.set("authKey")!= null && user.user_id == $.jStorage.set("authKey")){
-                    context.helpButton.style.display="none";
-                }else{
+                var pageRequest = this;
+                var request_id = this._id;
+                context.candidates.style.display = "none";
 
+                if($.jStorage.get("user") != null){
+                    if(user._id == $.jStorage.get("user")._id) {
+                        context.helpButton.style.display = "none";
+                        context.candidates.style.display = "block";
+                    }else{
+                        context.helpButton.addEventListener('click', function(){
+                            //TODO change button state and reload request elements
+                            rpc.call('requests.addCandidate', $.jStorage.get("user"),request_id, function (resp){
+                                if(resp.error){
+                                    tost.text= resp.error.message;
+                                    tost.show();
+                                } else {
+                                    pageRequest.candidates.push($.jStorage.get("user"));
+                                    tost.text= "Помощь принята!";
+                                    tost.show();
+                                }
+
+                            });
+                            this.removeEventListener('click',arguments.callee,false);
+                        });
+                    }
+                }else{
+                    context.helpButton.style.display = "none";
                 }
+            },
+            candidatesChanged:function(old,candidates) {
+                candidates;
             }
         });
 
