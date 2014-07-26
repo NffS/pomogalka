@@ -39,10 +39,14 @@
     <link rel="import" href="elements/request-page/request-page.html">
     <link rel="import" href="elements/login-form/login-form.html">
     <link rel="import" href="elements/user-page/user-page.html">
+    <link rel="import" href="components/paper-dialog/paper-dialog.html">
 
 </head>
 
 <body unresolved touch-action="auto">
+    <paper-dialog heading="Нужна помощь">
+        Пуссто
+    </paper-dialog>
     <core-scaffold responsiveWidth="1332px" id="core_scaffold">
         <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
             <core-toolbar id="core_toolbar">
@@ -94,7 +98,6 @@
 
     GMaps.geolocate({
         success: function(position) {
-            console.log(position);
             userPosition = position;
             map.setCenter(position.coords.latitude, position.coords.longitude);
             map.addMarker({
@@ -224,6 +227,7 @@
             var user = $.jStorage.get("user");
             if(user) setUserProfile(user);
         });
+        setInterval(checkNear, 1000);
     });
 
     function checkNear(){
@@ -232,20 +236,27 @@
         GMaps.geolocate({
             success: function(position) {
                 userPosition = position;
+                function callback(resp){
+                    if(resp.error) return;
+                    if(resp.result.requests.length > 0){
+                        showDialog(resp.result.requests[0].content);
+                    }
+                    $.jStorage.set("lastTime", resp.result.time);
+                    console.log(resp);
+                }
                 if(lastTime)
-                    rpc.call('requests.checkNear', position.coords, lastTime ,function(resp){
-                        if(resp.error) return;
-                        $.jStorage.set("lastTime", resp.result.time);
-                        console.log(resp);
-                    });
+                    rpc.call('requests.checkNear', position.coords, lastTime, callback);
                 else
-                    rpc.call('requests.checkNear', position.coords, function(resp){
-                        if(resp.error) return;
-                        $.jStorage.set("lastTime", resp.result.time);
-                        console.log(resp);
-                    });
+                    rpc.call('requests.checkNear', position.coords, callback);
             }
         });
+    }
+
+    function showDialog(content){
+        var dialog = document.querySelector('paper-dialog');
+        dialog.innerHTML = content;
+        dialog.toggle();
+        dialog.querySelector('paper-button').addEventListener("click", function(){dialog.toggle()});
     }
 
 </script>

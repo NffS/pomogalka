@@ -189,7 +189,9 @@ var requestsFunctions = {
             }
         };
 
-        if(time) query.date = {$gt: new Date(time)};
+        var tt = new Date(time);
+//        tt.setSeconds(tt.getSeconds() - 10);
+        if(time) query.date = {$gt: tt};
 
         console.log(query);
         db.requests.find(query, function(err, data){
@@ -197,7 +199,8 @@ var requestsFunctions = {
                 return {
                     _id: el._id,
                     title: el.title,
-                    address: el.address
+                    address: el.address,
+                    content: el.coord.infoWindow.content
                 }
             });
             resp.send({requests: res, time: new Date()});
