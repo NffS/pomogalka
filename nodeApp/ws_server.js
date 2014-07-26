@@ -133,6 +133,7 @@ var requestsFunctions = {
         var id = new mongojs.ObjectId();
         request[0]._id = id;
         request[0].coord.infoWindow.content = request[0].coord.infoWindow.content.replace("_id", id);
+        request[0].date = new Date();
         db.requests.insert(request[0], function (err, data){
             if(err) { resp.sendError(err); return; }
             resp.send(data);
