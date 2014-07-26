@@ -46,7 +46,7 @@
     <core-scaffold responsiveWidth="1332px" id="core_scaffold">
         <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
             <core-toolbar id="core_toolbar">
-                <img src="img/no-avatar.png" class="circular-menu" id="profile_image"/>
+                <img src="img/no-avatar.png" class="circular-menu" id="profile_image" onclick="openUser($.jStorage.get('user')._id)"/>
                 <paper-button label="вход" onclick="changePage(4, true)" id="profile_button"></paper-button>
             </core-toolbar>
             <core-menu selected="Карта" valueattr="label" selectedindex="0" id="core_menu" class="" theme="core-light-theme">
@@ -215,7 +215,7 @@
 
     $(document).ready(function(){
         window.addEventListener('polymer-ready', function () {
-            var socket = io('http://10.100.5.49:9000');
+            var socket = io(':9000');
             socket.on('connect', function(){
                 window.rpc = new rpcClient(socket);
                 checkHash();

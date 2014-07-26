@@ -125,7 +125,8 @@ function cancelHelper(helper_id){
 }
 
 function acceptAllHelpers(context){
-    rpc.call('requests.acceptAllHelpers', rp._id, rp.helpers,  function (resp) {
+    console.log(rp);
+    rpc.call('requests.acceptAllHelpers', rp._id, rp.helpers, rp.title,  function (resp) {
         if (resp.error) {
             toast.text = "error: "+ resp.error.message;
             console.log(resp.error.message);
