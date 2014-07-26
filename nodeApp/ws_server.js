@@ -77,14 +77,6 @@ var requestsFunctions = {
     },
     acceptAllHelpers: function(params){
         var resp = this;
-//        _id: mongojs.ObjectId('53ce913521207bcc774d2251'),
-//            title: "Заголовок оказаной помощи",
-//            helpers: [
-//            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-//            { _id: mongojs.ObjectId('53d39edc7e0ffe00007f1190'), name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-//        ],
-//            type: "fromUser",
-//            date: new Date()
         if(params.length==3) {
             db.requests.findAndModify({query: {_id: mongojs.ObjectId(params[0])},
                 update: {$set:{helpers: [ ]}, $addToSet: {"helps": {users: params[1], "date": new Date()}}}, new: true},
@@ -94,6 +86,8 @@ var requestsFunctions = {
                         return;
                     }
                     resp.send({helps: data.helps});
+                    findHelpers(params[1].map(function(elem){ return {_id:elem._id}}));
+
                     var ch = new Object();
                     ch._id =  mongojs.ObjectId(params[0]);
                     ch.title =  params[2];
@@ -109,6 +103,14 @@ var requestsFunctions = {
             });
         }else
             resp.sendError({message: "Wrong data received"});
+    },
+    confirmRating: function(params){
+        var resp = this;
+        db.users.findAndModify({query: {_id: mongojs.ObjectId(params[0]._id)},
+                update: {$inc: {reputation : 1}}, new: true},
+            function (err,data) {
+                resp.send({reputation: data.reputation});
+            });
     },
     getAllMarkers: function () {
         var resp = this;
@@ -288,5 +290,8 @@ var socket = io.listen(server);
 rpc.listen(socket);
 function newMarkers(resp) {
     socket.emit('newMarker', {message: resp});
+}
+function findHelpers(resp) {
+    socket.emit('findHelpers', {message: resp});
 }
 server.listen(9000);
