@@ -19,6 +19,8 @@ Polymer("request-page",{
     },
     userChanged:function(old,user) {
         var context = this.$;
+        context.unHelpButton.style.display = "none";
+        context.helpButton.style.display = "none";
         var request_id = this._id;
         if($.jStorage.get("user") != null){
             var usr = $.jStorage.get("user");

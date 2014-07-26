@@ -43,7 +43,7 @@
 </head>
 
 <body unresolved touch-action="auto">
-    <core-scaffold responsiveWidth="1333px" id="core_scaffold">
+    <core-scaffold responsiveWidth="1332px" id="core_scaffold">
         <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
             <core-toolbar id="core_toolbar">
                 <img src="img/no-avatar.png" class="circular-menu" id="profile_image"/>
@@ -215,7 +215,7 @@
 
     $(document).ready(function(){
         window.addEventListener('polymer-ready', function () {
-            var socket = io('http://localhost:9000');
+            var socket = io('http://10.100.5.49:9000');
             socket.on('connect', function(){
                 window.rpc = new rpcClient(socket);
                 checkHash();

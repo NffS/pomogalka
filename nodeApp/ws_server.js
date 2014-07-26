@@ -84,6 +84,10 @@ var requestsFunctions = {
                         return;
                     }
                     resp.send({helps: data.helps});
+                    db.users.update({$or: params[1].map(function(elem){ return {_id:mongojs.ObjectId(elem._id)}})}, {$inc: {reputation : 1}}, {multi: true},
+                    function(err){
+                    });
+
             });
         }else
             resp.sendError({message: "Wrong data received"});
