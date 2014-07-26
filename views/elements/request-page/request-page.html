@@ -40,7 +40,7 @@
                         <template repeat="{{help in helps}}">
                             <template repeat="{{user in help.users}}">
                                 <core-tooltip label="{{user.name}} {{user.surname}}" position="top">
-                                    <img class="circular " src="img/{{user.avatar}}">
+                                    <img class="circular " src="img/{{user.avatar}}" onclick="openUser('{{user.user_id}}')">
                                 </core-tooltip>
                             </template>
                         </template>
@@ -48,7 +48,7 @@
                         <h1>Помогут <paper-icon-button icon="done-all" id="acceptAllHelpersButton"></paper-icon-button></h1>
                         <template id="helpers"  repeat="{{helper in helpers}}">
                             <core-tooltip label="{{helper.name}} {{helper.surname}}" position="top">
-                                <img class="circular helpers" src="img/{{helper.avatar}}"><br>
+                                <img class="circular helpers" src="img/{{helper.avatar}}" onclick="openUser('{{helper.user_id}}')"><br>
                                 <template if="{{user._id == currentUser._id}}">
                                     <paper-icon-button  class="{{display}} cancelHelperButton" icon="thumb-down" onclick="cancelHelper('{{helper._id}}')"></paper-icon-button>
                                 </template>
@@ -61,7 +61,7 @@
                                     <template if="{{user._id == currentUser._id}}">
                                         <paper-icon-button  icon="thumb-up" class="acceptUserButton" onclick="acceptCandidate('{{candidate._id}}')" ></paper-icon-button>
                                     </template>
-                                    <img class="circular" src="img/{{candidate.avatar}}">
+                                    <img class="circular" src="img/{{candidate.avatar}}" onclick="openUser('{{candidate.user_id}}')">
                                 </core-tooltip>
                             </template>
                         </div>

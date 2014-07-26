@@ -38,25 +38,25 @@
                     <my-card>
                         <h1>Просьбы о помощи</h1>
                         <template repeat="{{request in user.requests}}">
-                            <paper-button raisedButton label="{{request.title}}" onclick="alert('{{request.request_id}}')"></paper-button><br>
+                            <paper-button raisedButton label="{{request.title}}" onclick="openRequest('{{request.request_id}}')"></paper-button><br>
                         </template>
                     </my-card>
                     <my-card>
                         <h1>Оказаная помощь</h1>
                         <template repeat="{{request in user.helps}}">
-                            <paper-button raisedButton label="{{request.title}}" onclick="alert('{{request.request_id}}')"></paper-button><br>
+                            <paper-button raisedButton label="{{request.title}}" onclick="openRequest('{{request.request_id}}')"></paper-button><br>
                         </template>
                     </my-card>
                     <template repeat="{{ch in user.chronicle}}">
                         <my-card>
                             <h1>{{ch.type == 'toUser' ? 'Помогли' : ch.type == 'fromUser' ? 'Помог' : 'Попросил'}}</h1>
                             <i>{{ch.date}}</i>
-                            <paper-button raisedButton label="{{ch.title}}" onclick="alert('{{ch.request_id}}')"></paper-button><br>
+                            <paper-button raisedButton label="{{ch.title}}" onclick="openRequest('{{ch.request_id}}')"></paper-button><br>
                             <template if="{{ch.type != 'create'}}">
                                 <h1>{{ch.type == 'toUser' ? 'Вот эти ребята' : 'Вместе с'}}</h1>
                                 <template repeat="{{us in ch.helpers}}">
                                     <core-tooltip label="{{us.name}} {{us.surname}}" position="top">
-                                        <img class="circular " src="img/{{us.avatar}}">
+                                        <img class="circular " src="img/{{us.avatar}}" onclick="openUser('{{us.user_id}}')">
                                     </core-tooltip>
                                 </template>
                             </template>
@@ -74,53 +74,6 @@
         Polymer("user-page",{
             ready: function(){
                 var context = this.$;
-                var ch2 = {
-                    request_id: 1,
-                    title: "Заголовок оказаной помощи",
-                    helpers: [
-                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-                    ],
-                    type: "toUser", //fromUser, create
-                    date: new Date()
-                };
-                var ch1 = {
-                    request_id: 1,
-                    title: "Заголовок оказаной помощи",
-                    helpers: [
-                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" },
-                        { user_id: 3, name: "John3", surname: "Malcovich3", avatar: "photo.jpg" }
-                    ],
-                    type: "fromUser",
-                    date: new Date()
-                };
-                var ch3 = {
-                    request_id: 1,
-                    title: "Заголовок созданной помощи",
-                    type: "create",
-                    date: new Date(),
-                    description: "Описание ола ываты авышта выштваыь лва мвашыдм иошд алыо аыои аы ыао м аы м ылмы  лмытма аыомтыа лдаытмтамв дшвытамшваым штвамшыоав дшвыаомлы  жщыоишрмлжиы"
-                };
-                this.user = {
-                    _id: 2,
-                    name: "John2",
-                    surname: "Malcovich2",
-                    avatar: "photo.jpg",
-                    phone: "099-23-45-852",
-                    address: "address",
-                    email: "e@mail.com",
-                    reputation: 0.1,
-                    requests: [
-                        { request_id: 1, title: "title1" },
-                        { request_id: 2, title: "title2" }
-                    ],
-                    helps: [
-                        {request_id: 1, title: "asd", date: new Date()},
-                        {request_id: 2, title: "asd", date: new Date()},
-                        {request_id: 3, title: "asd", date: new Date()}
-                    ],
-                    chronicle: [ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3,ch2,ch1,ch3]
-                };
 
                 function resize(){
                     var clientWidth = context.content.clientWidth;

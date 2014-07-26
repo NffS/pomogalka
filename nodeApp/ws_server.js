@@ -159,6 +159,21 @@ var usersFunctions = {
             return false;
         }
     },
+    get: function(params) {
+        var resp = this;
+        console.log(params);
+        db.users.findOne(
+            {_id: mongojs.ObjectId(params[0])},
+            function (err, user) {
+                if(err){
+                    resp.sendError({"message": err});
+                    return false;
+                }
+                resp.send(user);
+                return true;
+            }
+        );
+    },
     login:function(params){
         var resp = this;
         //TODO check params!=null

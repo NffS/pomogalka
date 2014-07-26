@@ -168,6 +168,7 @@
                 case 1: hash = "requestForm"; break;
                 case 3: hash = "registration"; break;
                 case 4: hash = "login"; break;
+                default: return;
             }
             setUrlHash(hash);
         }
@@ -183,6 +184,8 @@
                 case "login": changePage(4);  break;
                 default:
                     if(url.hash.indexOf("request") == 0) openRequest(url.hash.substring(7));
+                    if(url.hash.indexOf("user") == 0) openUser(url.hash.substring(4));
+
             }
         }
     }
@@ -198,6 +201,16 @@
             window.location.reload();
         };
         page.selected = 0;
+    }
+
+    function openUser(userId){
+        rpc.call('users.get', userId, function (resp) {
+            if(resp.error) return;
+            var up = document.querySelector("user-page");
+            up.user = resp.result;
+            changePage(5);
+            setUrlHash("user" + userId);
+        });
     }
 
     $(document).ready(function(){
