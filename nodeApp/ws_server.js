@@ -124,7 +124,7 @@ var requestsFunctions = {
     getRequest: function(id) {
         //TODO check id!=null
         var resp = this;
-        console.log(id[0]);
+//        console.log(id[0]);
         db.requests.findOne({_id: mongojs.ObjectId(id[0])}, function (err, data){
             if(err) resp.sendError(err);
             resp.send(data);
@@ -179,9 +179,7 @@ var requestsFunctions = {
             resp.sendError({message: "Wrong data received"});
             return;
         }
-        console.log(params);
         var coords = params[0];
-        console.log([coords.latitude, coords.longitude]);
         var time = params[1];
         var query = {
             point: {
@@ -192,11 +190,8 @@ var requestsFunctions = {
             }
         };
 
-        var tt = new Date(time);
-//        tt.setSeconds(tt.getSeconds() - 10);
-        if(time) query.date = {$gt: tt};
+        if(time) query.date = {$gt: new Date(time)};
 
-        console.log(query);
         db.requests.find(query, function(err, data){
             var res = data.map( function(el) {
                 return {
@@ -207,7 +202,6 @@ var requestsFunctions = {
                 }
             });
             resp.send({requests: res, time: new Date()});
-            console.log({requests: res, time: new Date()});
         });
     }
 };
@@ -232,7 +226,7 @@ var usersFunctions = {
     },
     get: function(params) {
         var resp = this;
-        console.log(params);
+//        console.log(params);
         db.users.findOne(
             {_id: mongojs.ObjectId(params[0])},
             function (err, user) {
