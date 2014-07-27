@@ -143,7 +143,7 @@ var requestsFunctions = {
         db.requests.insert(request[0], function (err, data){
             if(err) { resp.sendError(err); return; }
             resp.send(data);
-            newMarkers(data.coord);
+            notificateNear(request[0]);
             var ch = new Object();
             ch._id =  id;
             ch.title =  request[0].title;
@@ -290,12 +290,14 @@ server = http.createServer(function(req, res){
 
 var socket = io.listen(server);
 rpc.listen(socket);
-function newMarkers(resp) {
-    socket.emit('newMarker', {message: resp});
-}
 function findHelpers(resp) {
     socket.emit('findHelpers', {message: resp});
 }
+
+function notificateNear(request) {
+    socket.emit('notificateNear', {request: request});
+}
+
 server.listen(9000);
 
 function generateRss() {

@@ -224,9 +224,6 @@
                 });
             });
 
-            socket.on('newMarker', function (resp) {
-                map.addMarker(resp.message);
-            });
             socket.on('findHelpers', function (resp) {
                 for(var el in resp.message){
                     if(resp.message[el]._id === $.jStorage.get("user")._id){
@@ -244,11 +241,34 @@
 //
             });
 
+            socket.on('notificateNear', function (data) {
+                map.addMarker(data.request.coord);
+                var user = $.jStorage.get("user");
+                if(user && data.request.user._id == user._id) return;
+
+                GMaps.geolocate({
+                    success: function(position) {
+                        userPosition = position;
+                        console.log(position);
+                        console.log(data.request);
+                        var dist = distance(
+                                position.coords.latitude,  position.coords.longitude,
+                                data.request.coord.lat,    data.request.coord.lng
+                        );
+                        if(dist < 0.6)
+                            showDialog(data.request.coord.infoWindow.content +
+                                    "<p>Примерное расстояние: " + (dist*1000).toFixed(1) + "м</p>" +
+                                    "<p>Адрес: " + data.request.address + "</p>");
+
+                    }
+                });
+            });
+
             socket.connect();
             var user = $.jStorage.get("user");
             if(user) setUserProfile(user);
         });
-        setInterval(checkNear, 1000);
+        //setInterval(checkNear, 1000);
     });
 
     function checkNear(){
@@ -283,4 +303,22 @@
         dialog.querySelector('paper-button').addEventListener("click", function(){dialog.toggle()});
     }
 
+    function distance(lon1, lat1, lon2, lat2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = (lat2-lat1).toRad();  // Javascript functions in radians
+        var dLon = (lon2-lon1).toRad();
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c; // Distance in km
+        return d;
+    }
+
+    /** Converts numeric degrees to radians */
+    if (typeof(Number.prototype.toRad) === "undefined") {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        }
+    }
 </script>
