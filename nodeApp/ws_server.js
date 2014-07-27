@@ -82,13 +82,16 @@ var requestsFunctions = {
         if(params.length==3) {
             db.requests.findAndModify({query: {_id: mongojs.ObjectId(params[0])},
                 update: {$set:{helpers: [ ]}, $addToSet: {"helps": {users: params[1], "date": new Date()}}}, new: true},
-                function (err,data) {
+                function(err,data) {
                     if (err) {
                         resp.sendError({"message": err});
                         return;
                     }
                     resp.send({helps: data.helps});
-                    findHelpers(params[1].map(function(elem){ return {_id:elem._id}}));
+                    findHelpers({
+                        users: params[1].map(function(user){ return {_id: user._id}}),
+                        coord: data.coord
+                    });
 
                     var ch = new Object();
                     ch._id =  mongojs.ObjectId(params[0]);
@@ -291,7 +294,7 @@ server = http.createServer(function(req, res){
 var socket = io.listen(server);
 rpc.listen(socket);
 function findHelpers(resp) {
-    socket.emit('findHelpers', {message: resp});
+    socket.emit('findHelpers', resp);
 }
 
 function notificateNear(request) {

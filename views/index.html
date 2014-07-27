@@ -104,9 +104,7 @@
                 lat: position.coords.latitude,
                 lng: position.coords.longitude,
                 icon: {url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"},
-//                color: 'blue',
-                title: "Собор ёба!",
-                animation: 'BOUNCE',
+                title: "Я",
                 infoWindow: {
                     content: "<img class='circular' src='img/photo.jpg'/>" +
                             "<h2>Это Вы</h2>"
@@ -161,6 +159,7 @@
     function changePage(n, changeHash) {
         page = document.querySelector("core-pages#page");
         page.selected = n;
+        $(window).trigger('resize');
         if (changeHash) {
             var hash = "";
             switch (n) {
@@ -228,20 +227,31 @@
                 var user = $.jStorage.get("user");
                 if(!user) return;
 
-                for(var el in resp.message){
-                    if(resp.message[el]._id === user._id){
-                        rpc.call('requests.confirmRating', $.jStorage.get("user"),function(resp){
-                            if(resp.error)
-                                return;
-                            var up = document.querySelector("user-page");
-                            up.user.reputation = resp.result.reputation;
-                            var toast = document.querySelector("#toast");
-                            toast.text = "Вы получили дополнительный рейтинг";
-                            toast.show();
+                for(var el in resp.users){
+                    if(resp.users[el]._id === user._id){
+                        GMaps.geolocate({
+                            success: function(position) {
+                                userPosition = position;
+                                var dist = distance(
+                                        position.coords.latitude, position.coords.longitude,
+                                        resp.coord.lat,           resp.coord.lng
+                                );
+                                console.log(dist);
+                                if(dist < 1)
+                                    rpc.call('requests.confirmRating', user, function(resp){
+                                        if(resp.error)
+                                            return;
+                                        var up = document.querySelector("user-page");
+                                        up.user.reputation = resp.result.reputation;
+                                        var toast = document.querySelector("#toast");
+                                        toast.text = "Вы получили дополнительный рейтинг";
+                                        toast.show();
+                                    });
+                            }
                         });
+
                     }
                 }
-//
             });
 
             socket.on('notificateNear', function (data) {
@@ -252,8 +262,6 @@
                 GMaps.geolocate({
                     success: function(position) {
                         userPosition = position;
-                        console.log(position);
-                        console.log(data.request);
                         var dist = distance(
                                 position.coords.latitude,  position.coords.longitude,
                                 data.request.coord.lat,    data.request.coord.lng
