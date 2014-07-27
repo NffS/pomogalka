@@ -24,6 +24,7 @@ var requestsFunctions = {
                 }
                 else {
                     resp.send("ok");
+                    newCandidate({candidate:params[0]});
                 }
             });
         }else
@@ -40,6 +41,7 @@ var requestsFunctions = {
                 }
                 else {
                     resp.send("ok");
+
                 }
             });
         }else
@@ -299,6 +301,9 @@ function findHelpers(resp) {
 
 function notificateNear(request) {
     socket.emit('notificateNear', {request: request});
+}
+function newCandidate(request) {
+    socket.emit('newCandidate', {request: request});
 }
 
 server.listen(9000);

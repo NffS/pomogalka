@@ -170,6 +170,7 @@
                 default: return;
             }
             setUrlHash(hash);
+
         }
     }
 
@@ -273,6 +274,11 @@
 
                     }
                 });
+            });
+
+            socket.on('newCandidate', function(data){
+                var rp = document.querySelector("request-page");
+                rp.candidates.push(data.request.candidate);
             });
 
             socket.connect();
