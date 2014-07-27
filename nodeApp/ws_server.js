@@ -8,7 +8,7 @@ var RSS = require('rss');
 var mongojs = require('mongojs');
 var db = mongojs("127.0.0.1/pomogalka",["requests","users"]);
 
-var siteUrl = "http://pomogalka.com.ua";
+var siteUrl = "http://185.25.117.230";
 
 
 var requestsFunctions = {
@@ -310,9 +310,10 @@ function generateRss() {
             site_url: siteUrl
         });
         data.forEach(function (i) {
+            var tags = "#помогалка #нужнаПомощь #" + i.type == 'user' ? 'помогите' : i.type == 'city' ? 'помощьГороду' : 'помощьБедным';
             feed.item({
                 title: i.title,
-                description: i.description,
+                description: tags + " " + i.description,
                 url: siteUrl + '/request' + i._id, // link to the item
                 categories: [i.type, 'pomogalka'], // optional - array of item categories
                 author: i.user.name + " " + i.user.surname, // optional - defaults to feed author property

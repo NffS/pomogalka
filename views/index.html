@@ -225,8 +225,11 @@
             });
 
             socket.on('findHelpers', function (resp) {
+                var user = $.jStorage.get("user");
+                if(!user) return;
+
                 for(var el in resp.message){
-                    if(resp.message[el]._id === $.jStorage.get("user")._id){
+                    if(resp.message[el]._id === user._id){
                         rpc.call('requests.confirmRating', $.jStorage.get("user"),function(resp){
                             if(resp.error)
                                 return;
