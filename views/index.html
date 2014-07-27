@@ -158,6 +158,7 @@
 
     function changePage(n, changeHash) {
         page = document.querySelector("core-pages#page");
+        if(!$.jStorage.get("user") && n==1) n=4;
         page.selected = n;
         $(window).trigger('resize');
         if (changeHash) {
@@ -179,7 +180,7 @@
         if (url.hash != "") {
             switch(url.hash){
                 case "map": changePage(0); break;
-                case "requestForm": changePage(1); break;
+                case "requestForm": if($.jStorage.get("user")) changePage(1); else changePage(4); break;
                 case "registration": changePage(3); break;
                 case "login": changePage(4);  break;
                 default:
